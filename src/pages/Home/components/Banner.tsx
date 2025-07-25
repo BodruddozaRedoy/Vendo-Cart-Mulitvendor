@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useRef } from "react";
@@ -21,14 +21,14 @@ const mainBanner = [
         title: "Smart & Sleek Laptops",
         description: "Powerful performance meets minimal design. Discover the latest range of laptops built for work, creativity, and play — all in one.",
         productLink: "product link",
-        image: "image",
+        image: "https://i.ibb.co/Fkxd72xj/giant-277731-removebg-preview.png",
     },
     {
         subtitle: "subtitle3",
         title: "title3",
         description: "description",
         productLink: "product link",
-        image: "image",
+        image: "https://www.pngall.com/wp-content/uploads/9/Electronics-Gadget-PNG-Photos.png",
     },
 ];
 
@@ -36,6 +36,8 @@ const mainBanner = [
 const MainBanner = () => {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
+    const bannerBgColors = ["#d4f7ff", "#e0f2ee", "#fff4f6"];
+
     return (
         <div className="relative">
             <div className="flex gap-4 mt-4 absolute bottom-10 left-10 z-10">
@@ -49,15 +51,19 @@ const MainBanner = () => {
                     ref={nextRef}
                     className="bg-primary px-3 py-1 rounded "
                 >
-                    <IoIosArrowForward/>
+                    <IoIosArrowForward />
                 </Button>
             </div>
             <Swiper
-                modules={[Navigation, Pagination]} // Include Pagination if you want it
+                modules={[Navigation, Pagination, Autoplay]} // Include Pagination if you want it
                 slidesPerView={1}
                 navigation={{
                     prevEl: prevRef.current,
                     nextEl: nextRef.current,
+                }}
+                autoplay={{
+                    delay: 2000,
+                    disableOnInteraction: false
                 }}
                 onBeforeInit={(swiper) => {
                     // Ensure navigation is correctly typed and assigned
@@ -74,8 +80,11 @@ const MainBanner = () => {
             >
                 {mainBanner?.map((banner, i) => (
                     <SwiperSlide key={i}>
-                        <div className="w-full h-[500px] bg-[#d4f7ff] text-primary rounded-lg p-10 relative">
-                            <div className=" space-y-5">
+                        <div
+                            className="w-full h-[500px] text-primary rounded-lg p-10 relative"
+                            style={{ backgroundColor: bannerBgColors[i % bannerBgColors.length] }}
+                        >
+                            <div className="space-y-5">
                                 <p>{banner.subtitle}</p>
                                 <p className="font-bold text-4xl w-1/2 leading-14">{banner.title}</p>
                                 <p className="text-sm w-1/3">{banner.description}</p>
@@ -84,11 +93,12 @@ const MainBanner = () => {
                             <img
                                 src={banner.image}
                                 alt={banner.title}
-                                className="object-contain absolute top-0 right-0"
+                                className="object-contain absolute top-0 right-10 w-[550px]"
                             />
                         </div>
                     </SwiperSlide>
                 ))}
+
             </Swiper>
 
         </div>
@@ -97,7 +107,36 @@ const MainBanner = () => {
 
 const SideBanner = () => {
     return (
-        <div></div>
+        <div className="ml-5 flex flex-col gap-5 items-center justify-end h-full">
+            {/* 1st banner  */}
+            <div className="w-full bg-[#fff4f6] h-1/2 flex flex-col justify-center text-primary rounded-lg p-5 relative overflow-hidden">
+                <div className=" space-y-3">
+                    <p>Top 10% Discount</p>
+                    <p className="font-bold text-xl w-1/2">Apple watch series 7</p>
+                    <p className="font-semibold w-2/3">Apple watch series 7 with features</p>
+                    <Button className="bg-secondary">Shop Now</Button>
+                </div>
+                <img
+                    src={"https://i.ibb.co/Fkxd72xj/giant-277731-removebg-preview.png"}
+                    alt={"banner.title"}
+                    className="object-contain absolute -bottom-10 -right-10 w-[200px]"
+                />
+            </div>
+            {/* 2nd banner  */}
+            <div className="w-full bg-[#e0f2ee] h-1/2 flex flex-col justify-center text-primary rounded-lg p-5 relative overflow-hidden">
+                <div className=" space-y-3">
+                    <p>Top 10% Discount</p>
+                    <p className="font-bold text-xl w-1/2">Apple watch series 7</p>
+                    <p className="font-semibold w-2/3">Apple watch series 7 with features</p>
+                    <Button className="bg-secondary">Shop Now</Button>
+                </div>
+                <img
+                    src={"https://i.ibb.co/Fkxd72xj/giant-277731-removebg-preview.png"}
+                    alt={"banner.title"}
+                    className="object-contain absolute -bottom-10 -right-10 w-[200px]"
+                />
+            </div>
+        </div>
     )
 }
 
@@ -105,14 +144,14 @@ export default function Banner() {
 
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-4">
+        <div className="grid grid-cols-1 lg:grid-cols-6">
             {/* Main banner */}
-            <div className="col-span-3">
+            <div className="col-span-4">
                 <MainBanner />
             </div>
             {/* Side banner  */}
-            <div className="col-span-1">
-                <SideBanner/>
+            <div className="col-span-2">
+                <SideBanner />
             </div>
         </div>
     );
