@@ -1,10 +1,9 @@
-import { Button } from '@/components/ui/button'
-import React from 'react'
+import Banner from './components/Banner'
 
 export default function HomePage() {
   return (
     <div>
-      <Button className=''>Home</Button>
+      <Banner/>
     </div>
   )
 }
