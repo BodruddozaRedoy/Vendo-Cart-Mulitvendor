@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward, IoMdArrowDropright } from "react-icons/io";
 
 
 
@@ -88,7 +88,8 @@ const MainBanner = () => {
                                 <p>{banner.subtitle}</p>
                                 <p className="font-bold text-4xl w-1/2 leading-14">{banner.title}</p>
                                 <p className="text-sm w-1/3">{banner.description}</p>
-                                <Button className="bg-secondary">Shop Now</Button>
+                                <Button className="bg-secondary">Shop Now <IoMdArrowDropright />
+                                </Button>
                             </div>
                             <img
                                 src={banner.image}
@@ -111,10 +112,11 @@ const SideBanner = () => {
             {/* 1st banner  */}
             <div className="w-full bg-[#fff4f6] h-1/2 flex flex-col justify-center text-primary rounded-lg p-5 relative overflow-hidden">
                 <div className=" space-y-3">
-                    <p>Top 10% Discount</p>
+                    <p className="font-light">Top 10% Discount</p>
                     <p className="font-bold text-xl w-1/2">Apple watch series 7</p>
                     <p className="font-semibold w-2/3">Apple watch series 7 with features</p>
-                    <Button className="bg-secondary">Shop Now</Button>
+                    <Button className="bg-secondary">Shop Now <IoMdArrowDropright />
+                    </Button>
                 </div>
                 <img
                     src={"https://i.ibb.co/Fkxd72xj/giant-277731-removebg-preview.png"}
@@ -125,10 +127,11 @@ const SideBanner = () => {
             {/* 2nd banner  */}
             <div className="w-full bg-[#e0f2ee] h-1/2 flex flex-col justify-center text-primary rounded-lg p-5 relative overflow-hidden">
                 <div className=" space-y-3">
-                    <p>Top 10% Discount</p>
+                    <p className="font-light">Top 10% Discount</p>
                     <p className="font-bold text-xl w-1/2">Apple watch series 7</p>
                     <p className="font-semibold w-2/3">Apple watch series 7 with features</p>
-                    <Button className="bg-secondary">Shop Now</Button>
+                    <Button className="bg-primary">Shop Now <IoMdArrowDropright />
+                    </Button>
                 </div>
                 <img
                     src={"https://i.ibb.co/Fkxd72xj/giant-277731-removebg-preview.png"}
