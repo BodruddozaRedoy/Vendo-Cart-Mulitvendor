@@ -20,7 +20,7 @@ export default function FeaturedCategoryCard({category} : categoriesProps) {
                 }
             </div>
         </div>
-        <button className='bg-primary py-1 px-3 text-white absolute top-0 right-0 rounded-tr-lg rounded-bl-lg cursor-pointer'>View all</button>
+          <button className='bg-primary py-1 px-3 text-background absolute top-0 right-0 rounded-tr-lg rounded-bl-lg cursor-pointer'>View all</button>
     </div>
   )
 }

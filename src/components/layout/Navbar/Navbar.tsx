@@ -161,7 +161,7 @@ const MainNavbar = () => {
               <div  className={` absolute top-10 left-2 border py-3 px-3  space-y-2 bg-white max-h-[400px] overflow-y-auto`}>
             {
               categories.map((category, i) => (
-                <p onClick={() => {setSelectCategory(category.value); setToggleCategory(false)}} key={i} className="py-1 px-3 pr-20 hover:bg-primary hover:text-white text-primary cursor-pointer select-none">{category.label}</p>
+                <p onClick={() => { setSelectCategory(category.value); setToggleCategory(false) }} key={i} className="py-1 px-3 pr-20 hover:bg-primary hover:text-background text-primary cursor-pointer select-none">{category.label}</p>
               ))
             }
           </div>

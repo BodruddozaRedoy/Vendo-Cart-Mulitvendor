@@ -1,4 +1,5 @@
 import Banner from './components/Banner'
+import BestSellers from './components/BestSellers'
 import FeaturedCategories from './components/FeaturedCategories'
 
 export default function HomePage() {
@@ -6,6 +7,7 @@ export default function HomePage() {
     <div className='space-y-10'>
       <Banner/>
       <FeaturedCategories/>
+      <BestSellers/>
     </div>
   )
 }

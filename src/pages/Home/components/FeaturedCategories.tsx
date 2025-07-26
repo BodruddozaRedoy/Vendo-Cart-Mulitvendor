@@ -1,4 +1,5 @@
 import FeaturedCategoryCard from '@/components/common/FeaturedCategoryCard';
+import SectionTitle from '@/components/common/SectionTitle';
 
 const categories = [
   {
@@ -48,14 +49,7 @@ const categories = [
 export default function FeaturedCategories() {
   return (
     <div>
-        {/* header  */}
-        <div>
-            {/* title  */}
-            <div>
-                <h1 className='text-3xl font-bold text-primary'>Featured Categories</h1>
-                <p className='text-primary font-light'>Choose your necessary products from this feature categories.</p>
-            </div>
-        </div>
+        <SectionTitle title={"Featured Categories"} description={"Choose your necessary products from this feature categories."}/>
         <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 xl:gap-10 mt-5'>
             {
                 categories.map((category, i) => (
