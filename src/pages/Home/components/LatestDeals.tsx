@@ -59,7 +59,7 @@ export default function LatestDeals() {
                 <SpecialProductCard product={specialProduct}/>
             </div>
             {
-                products.map((product, i) => (
+                products.slice(0, 11).map((product, i) => (
                     <div className='col-span-1'><ProductCard product={product} key={i}/></div>
                 ))
             }

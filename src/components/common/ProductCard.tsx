@@ -8,7 +8,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
             <img className='w-60 mt-10 h-40 object-contain' src={product.image} alt="" />
             <div className='p-5 flex-1 space-y-2'>
                 <p className='text-xs font-semibold'>{product.brand}</p>
-                <h1 className='font-semibold'>{product.name}</h1>
+                <h1 className='font-semibold truncate w-65'>{product.name}</h1>
                 <p className='flex gap-1 items-center text-sm font-light'><FaStar className='text-yellow-500'/>
                     ({product.rating})</p>
                 <p className='font-bold text-xl'>${product.price}</p>

@@ -61,6 +61,35 @@ export const products: IProduct[] = [
     vendor: vendors[0],
   },
   {
+    _id: "prod001",
+    name: "Samsung Galaxy S24 Ultra",
+    image: "https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg",
+    category: "Smartphones",
+    subcategory: "Android Phones",
+    brand: "Samsung",
+    price: 1199.99,
+    discount: 10,
+    inStock: true,
+    rating: 4.8,
+    reviewsCount: 325,
+    colors: ["Phantom Black", "Titanium Gray", "Violet"],
+    images: [
+      "https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg",
+      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796",
+    ],
+    description:
+      "A premium flagship smartphone with 200MP camera, Snapdragon chipset, and QHD+ 120Hz display.",
+    features: [
+      "200MP Quad Camera",
+      "Snapdragon 8 Gen 3",
+      "6.8\" QHD+ AMOLED 120Hz",
+      "5000 mAh battery, 45W fast charge",
+    ],
+    warranty: "1 Year Official Warranty",
+    shipping: "Free delivery in 3–5 business days",
+    vendor: vendors[0],
+  },
+  {
     _id: "prod002",
     name: "MacBook Pro 16\" M4",
     image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
@@ -309,7 +338,7 @@ export default function BestSellers() {
         {/* product list  */}
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5'>
             {
-                products?.map((product:IProduct, i:number) => (
+                products?.slice(0, 5).map((product:IProduct, i:number) => (
                     <ProductCard product={product} key={i}/>
                 ))
             }

@@ -29,7 +29,7 @@ export default function SpecialProductCard({ product }: { product: IProduct }) {
       <div className='flex flex-col items-start w-full px-5'>
         {
         product.features.slice(0, 3).map((list, i) => (
-          <p key={i} className='list-item'>{list}</p>
+          <p key={i} className='list-item text-muted-foreground text-sm'>{list}</p>
         ))
       }
       </div>
