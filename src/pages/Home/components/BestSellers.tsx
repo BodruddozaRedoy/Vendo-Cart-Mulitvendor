@@ -325,6 +325,7 @@ export default function BestSellers() {
     const [filter, setFilter] = useState("All")
   return (
     <div>
+      {/* header  */}
         <div className='flex justify-between items-end'>
             <SectionTitle title='Best Sellers' description='Special products in this month'/>
             <div className='flex gap-5 items-center text-primary'>

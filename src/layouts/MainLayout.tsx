@@ -8,7 +8,7 @@ export default function MainLayout() {
       <nav>
         <Navbar />
       </nav>
-      <main className='container mx-auto my-10 '>
+      <main className=' my-10 '>
         <Outlet />
       </main>
       <footer>
