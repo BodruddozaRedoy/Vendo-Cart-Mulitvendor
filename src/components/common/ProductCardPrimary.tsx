@@ -2,7 +2,7 @@ import type { IProduct } from '@/types'
 import { FaStar } from "react-icons/fa";
 
 
-export default function ProductCard({ product }: { product: IProduct }) {
+export default function ProductCardPrimary({ product }: { product: IProduct }) {
     return (
         <div className='bg-background shadow-md flex flex-col items-center rounded-lg text-primary relative'>
             <img className='w-60 mt-10 h-40 object-contain' src={product.image} alt="" />

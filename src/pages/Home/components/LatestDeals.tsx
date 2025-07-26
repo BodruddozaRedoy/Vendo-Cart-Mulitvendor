@@ -5,7 +5,7 @@ import type { IProduct } from '@/types'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { products } from './BestSellers'
-import ProductCard from '@/components/common/ProductCard'
+import ProductCardPrimary from '@/components/common/ProductCardPrimary'
 
 const specialProduct:IProduct = {
     _id: "prod001",
@@ -60,7 +60,7 @@ export default function LatestDeals() {
             </div>
             {
                 products.slice(0, 11).map((product, i) => (
-                    <div className='col-span-1'><ProductCard product={product} key={i}/></div>
+                    <div className='col-span-1'><ProductCardPrimary product={product} key={i}/></div>
                 ))
             }
             </div>

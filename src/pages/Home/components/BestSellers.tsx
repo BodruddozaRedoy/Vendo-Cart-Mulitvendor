@@ -1,4 +1,4 @@
-import ProductCard from '@/components/common/ProductCard';
+import ProductCardPrimary from '@/components/common/ProductCardPrimary';
 import SectionTitle from '@/components/common/SectionTitle'
 import type { IProduct, IVendor } from '@/types';
 import { useState } from 'react';
@@ -340,7 +340,7 @@ export default function BestSellers() {
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5'>
             {
                 products?.slice(0, 5).map((product:IProduct, i:number) => (
-                    <ProductCard product={product} key={i}/>
+                    <ProductCardPrimary product={product} key={i}/>
                 ))
             }
         </div>
