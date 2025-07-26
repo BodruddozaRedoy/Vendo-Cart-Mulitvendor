@@ -30,7 +30,7 @@ const vendors: IVendor[] = [
 ];
 
 // Sample products
-const products: IProduct[] = [
+export const products: IProduct[] = [
   {
     _id: "prod001",
     name: "Samsung Galaxy S24 Ultra",

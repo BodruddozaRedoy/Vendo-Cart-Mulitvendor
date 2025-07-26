@@ -34,5 +34,5 @@ export interface IProduct {
     features: string[],
     warranty: string,
     shipping: string,
-    vendor: IVendor
+    vendor?: IVendor
 }
