@@ -152,7 +152,7 @@ const MainNavbar = () => {
         Vendo<span className="text-primary">Cart</span>
       </div>
       {/* categories bar  */}
-      <div className="flex">
+      <div className="flex z-50">
         {/* select container  */}
         <div className="py-2  px-5 border-y border-l rounded-l-lg relative">
           <p onClick={() => setToggleCategory(!toggleCategory)} className="flex items-center gap-2 cursor-pointer select-none"><p className="w-[120px] truncate">{selectCategory}</p><TiArrowSortedDown/></p>

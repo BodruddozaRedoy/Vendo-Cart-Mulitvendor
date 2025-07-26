@@ -2,6 +2,7 @@ import Banner from './components/Banner'
 import BestSellers from './components/BestSellers'
 import FeaturedCategories from './components/FeaturedCategories'
 import LatestDeals from './components/LatestDeals'
+import MultiPoster from './components/MultiPoster'
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <FeaturedCategories/>
       <BestSellers/>
       <LatestDeals/>
+      <MultiPoster/>
     </div>
   )
 }
