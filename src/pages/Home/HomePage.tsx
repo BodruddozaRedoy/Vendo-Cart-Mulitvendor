@@ -10,7 +10,7 @@ import Trending from './components/Trending'
 
 export default function HomePage() {
   return (
-    <div className='space-y-10'>
+    <div className='space-y-10 lg:space-y-20'>
       <section className='container mx-auto'>
         <Banner />
       </section>

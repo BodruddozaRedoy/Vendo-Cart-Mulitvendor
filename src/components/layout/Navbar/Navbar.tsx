@@ -6,24 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ArrowDownNarrowWide, Check, ChevronsUpDown } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { TiArrowSortedDown } from "react-icons/ti";
-import { Separator } from "@/components/ui/separator"
 
 
 // top nav links 
@@ -84,7 +66,7 @@ const mainNavLinks = [
   },
   {
     path: "/shop",
-    title: "Title"
+    title: "Shop"
   },
   {
     path: "/vendors",
@@ -139,8 +121,6 @@ const TopNavbar = () => {
 
 
 const MainNavbar = () => {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
   const location = useLocation()
 
   const [selectCategory, setSelectCategory] = useState("All Categories")
@@ -176,7 +156,7 @@ const MainNavbar = () => {
       <div className="flex items-center gap-5">
         {
           mainNavLinks.map((link, i) => (
-            <Link to={link.path} key={i}><p className={`${location.pathname.includes(link.path) && 'text-secondary border-b'} text-primary pb-0.2  hover:text-secondary border-secondary`}>{link.title}</p></Link>
+            <Link to={link.path} key={i}><p className={`${location.pathname === link.path && 'text-secondary border-b'} text-primary pb-0.2  hover:text-secondary border-secondary`}>{link.title}</p></Link>
           ))
         }
       </div>

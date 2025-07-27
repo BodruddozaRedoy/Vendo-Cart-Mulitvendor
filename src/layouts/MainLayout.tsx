@@ -8,7 +8,7 @@ export default function MainLayout() {
       <nav>
         <Navbar />
       </nav>
-      <main className=' my-10 '>
+      <main className='my-10 lg:my-20 '>
         <Outlet />
       </main>
       <footer>
