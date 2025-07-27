@@ -87,7 +87,7 @@ const MainBanner = () => {
                             <div className="space-y-2 lg:space-y-5">
                                 <p>{banner.subtitle}</p>
                                 <p className="font-bold lg:text-4xl w-1/2 lg:leading-14">{banner.title}</p>
-                                <p className="text-sm w-1/3">{banner.description}</p>
+                                <p className="text-sm w-2/3 truncate">{banner.description}</p>
                                 <Button className="bg-secondary">Shop Now <IoMdArrowDropright />
                                 </Button>
                             </div>
