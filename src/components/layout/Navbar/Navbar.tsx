@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { TiArrowSortedDown } from "react-icons/ti";
+import { HiMiniBars3CenterLeft } from "react-icons/hi2";
 
 
 // top nav links 
@@ -126,13 +127,13 @@ const MainNavbar = () => {
   const [selectCategory, setSelectCategory] = useState("All Categories")
   const [toggleCategory, setToggleCategory] = useState(false)
   return (
-    <div className="flex items-center justify-between px-20 py-5 border-b">
+    <div className="flex items-center justify-between px-5 lg:px-20 py-5 border-b">
       {/* logo  */}
       <div className="font-bold text-2xl">
         Vendo<span className="text-primary">Cart</span>
       </div>
       {/* categories bar  */}
-      <div className="flex z-50">
+      <div className="hidden lg:flex z-50">
         {/* select container  */}
         <div className="py-2  px-5 border-y border-l rounded-l-lg relative">
           <p onClick={() => setToggleCategory(!toggleCategory)} className="flex items-center gap-2 cursor-pointer select-none"><p className="w-[120px] truncate">{selectCategory}</p><TiArrowSortedDown/></p>
@@ -148,12 +149,11 @@ const MainNavbar = () => {
             )
           }
         </div>
-        {/* <Separator  orientation="vertical" /> */}
         {/* input */}
         <input className="py-2 px-5 border-y border-r rounded-r-lg w-full" type="text" name="" id="" placeholder="Search here..." />
       </div>
       {/* main nav links  */}
-      <div className="flex items-center gap-5">
+      <div className="hidden lg:flex items-center gap-5">
         {
           mainNavLinks.map((link, i) => (
             <Link to={link.path} key={i}><p className={`${location.pathname === link.path && 'text-secondary border-b'} text-primary pb-0.2  hover:text-secondary border-secondary`}>{link.title}</p></Link>
@@ -161,7 +161,7 @@ const MainNavbar = () => {
         }
       </div>
       {/* nav end links  */}
-      <div className="flex items-center gap-4">
+      <div className="hidden lg:flex items-center gap-4">
         {/* account  */}
         <DropdownMenu>
           <DropdownMenuTrigger className="flex gap-2 items-center font-semibold text-primary"><img className="w-5" src="https://img.icons8.com/?size=100&id=xXjlE05o3dcg&format=png&color=000000" alt="" /> Account</DropdownMenuTrigger>
@@ -184,7 +184,10 @@ const MainNavbar = () => {
           <img className="w-5" src="https://img.icons8.com/?size=100&id=ii6Lr4KivOiE&format=png&color=000000" alt="" />
           <Link to={"/cart"}><p>Cart</p></Link>
         </div>
+
+        {/* mobile bars  */}
       </div>
+        <HiMiniBars3CenterLeft className="flex lg:hidden font-bold text-2xl"/>
     </div>
   )
 }
