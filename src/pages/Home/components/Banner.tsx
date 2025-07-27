@@ -40,7 +40,7 @@ const MainBanner = () => {
 
     return (
         <div className="relative">
-            <div className="flex gap-4 mt-4 absolute bottom-10 left-10 z-10">
+            <div className="flex gap-4 mt-4 absolute bottom-5 left-5 lg:bottom-10 lg:left-10 z-10">
                 <Button
                     ref={prevRef}
                     className="bg-secondary px-3 py-1 rounded hover:bg-secondary"
@@ -81,12 +81,12 @@ const MainBanner = () => {
                 {mainBanner?.map((banner, i) => (
                     <SwiperSlide key={i}>
                         <div
-                            className="w-full h-[500px] text-primary rounded-lg p-10 relative"
+                            className="w-full h-[200px] lg:h-[500px] text-primary rounded-lg p-5 lg:p-10 relative"
                             style={{ backgroundColor: bannerBgColors[i % bannerBgColors.length] }}
                         >
-                            <div className="space-y-5">
+                            <div className="space-y-2 lg:space-y-5">
                                 <p>{banner.subtitle}</p>
-                                <p className="font-bold text-4xl w-1/2 leading-14">{banner.title}</p>
+                                <p className="font-bold lg:text-4xl w-1/2 lg:leading-14">{banner.title}</p>
                                 <p className="text-sm w-1/3">{banner.description}</p>
                                 <Button className="bg-secondary">Shop Now <IoMdArrowDropright />
                                 </Button>
@@ -94,7 +94,7 @@ const MainBanner = () => {
                             <img
                                 src={banner.image}
                                 alt={banner.title}
-                                className="object-contain absolute top-0 right-10 w-[550px]"
+                                className="object-contain absolute top-10 lg:top-0 right-10 w-30 lg:w-[550px]"
                             />
                         </div>
                     </SwiperSlide>
