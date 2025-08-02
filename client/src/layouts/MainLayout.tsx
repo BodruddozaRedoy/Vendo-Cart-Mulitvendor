@@ -2,10 +2,10 @@ import Navbar from '../components/layout/Navbar/Navbar'
 import { Outlet } from 'react-router'
 import Footer from '../components/layout/Footer/Footer'
 import { Toaster } from 'sonner'
-import { useGetUserQuery } from '@/redux/features/auth/authApi'
+import { useGetProfile } from '@/hooks/useGetProfile'
 
 export default function MainLayout() {
-  const { data:user, isLoading } = useGetUserQuery(undefined)
+  const { user, isLoading } = useGetProfile()
   return (
     <div>
       {

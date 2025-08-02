@@ -21,6 +21,9 @@ import { IoLanguage } from "react-icons/io5";
 import LoginPage from "@/pages/Login/LoginPage";
 import { Button } from "@/components/ui/button";
 import { RiLoginBoxFill } from "react-icons/ri";
+import { useGetUserQuery, useLoginUserMutation, useLogoutMutation } from "@/redux/features/auth/authApi";
+import { useGetProfile } from "@/hooks/useGetProfile";
+import { toast } from "sonner";
 
 
 // top nav links 
@@ -130,8 +133,15 @@ const MainNavbar = () => {
 
   const [selectCategory, setSelectCategory] = useState("All Categories")
   const [toggleCategory, setToggleCategory] = useState(false)
+  const [logout, result] = useLogoutMutation()
+  const {user} = useGetProfile()
 
-  const user = false
+  const handleLogout = () => {
+    logout(null)
+    if(result.isSuccess){
+      toast.success("Logged Out")
+    }
+  }
 
   return (
     <div className="flex items-center justify-between px-5 lg:px-20 py-5 border-b">
@@ -180,7 +190,7 @@ const MainNavbar = () => {
             <DropdownMenuItem><Link to={"account/order-tracking"}>Order Tracking</Link></DropdownMenuItem>
             <DropdownMenuItem><Link to={"/account/my-orders"}>My Orders</Link></DropdownMenuItem>
             <DropdownMenuItem><Link to={"/account/settings"}>Settings</Link></DropdownMenuItem>
-            <DropdownMenuItem>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu> : (
           <Link to={"/login"}><Button variant={"outline"}><RiLoginBoxFill /> Login</Button></Link>

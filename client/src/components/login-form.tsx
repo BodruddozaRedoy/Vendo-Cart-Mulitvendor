@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useLoginUserMutation } from "@/redux/features/auth/authApi"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -13,6 +13,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [loginUser, result] = useLoginUserMutation()
+  const navigate = useNavigate()
   const [loginData, setLoginData] = useState({
     email: "",
     password: ""
@@ -24,6 +25,7 @@ export function LoginForm({
       loginUser(loginData)
       if (result.isSuccess) {
         toast.success("Logged in Successfully")
+        navigate("/")
       }
       if (result.isError) {
         toast.error("Invalid Credentials")
