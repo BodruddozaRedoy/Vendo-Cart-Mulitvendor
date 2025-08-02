@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label"
 import { Link } from "react-router"
 import { useState } from "react"
 import { useRegisterUserMutation } from "@/redux/features/auth/authApi"
+import { toast } from "sonner"
 
 export function RegisterForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
     const [registerData, setRegisterData] = useState({
-        name: "",
+        fullName: "",
         email: "",
         password: ""
     })
@@ -23,9 +24,16 @@ export function RegisterForm({
         console.log("form data", registerData)
         try {
             registerUser(registerData)
+            if(result.isSuccess){
+                toast.success("User Registered Successfully")
+            }
+            if(result.isError){
+                toast.error("User already Registered. Please Sign In")
+            }
             console.log(result)
         } catch (error) {
             console.log(error)
+            toast.error("Something went wrong")
         }
     }
     return (
@@ -47,7 +55,7 @@ export function RegisterForm({
                                     type="text"
                                     placeholder="Enter your full name"
                                     name="fullName"
-                                    onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                                    onChange={(e) => setRegisterData({ ...registerData, fullName: e.target.value })}
                                     required
                                 />
                             </div>
@@ -67,8 +75,10 @@ export function RegisterForm({
                                 </div>
                                 <Input id="password" type="password" placeholder="Enter you password" required onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })} />
                             </div>
-                            <Button type="submit" className="w-full">
-                                Register
+                            <Button type="submit" disabled={result.isLoading} className="w-full">
+                                {
+                                    result.isLoading ? <div className="w-12 text-background"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,23a9.63,9.63,0,0,1-8-9.5,9.51,9.51,0,0,1,6.79-9.1A1.66,1.66,0,0,0,12,2.81h0a1.67,1.67,0,0,0-1.94-1.64A11,11,0,0,0,12,23Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"></animateTransform></path></svg></div> : "Register"
+                                }
                             </Button>
                             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                                 <span className="bg-card text-muted-foreground relative z-10 px-2">

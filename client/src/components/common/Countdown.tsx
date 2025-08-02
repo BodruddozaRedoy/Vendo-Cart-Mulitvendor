@@ -15,7 +15,7 @@ export default function CountdownTimer({ targetDate }: { targetDate: Date }) {
                     "py-1 px-3 bg-secondary text-background flex items-center justify-center rounded-lg text-2xl font-mono shadow-md flex-col"
 
                 return (
-                    <div className="flex justify-center items-center gap-2">
+                    <div className="flex justify-center items-center gap-2 ">
                         <div className={boxClass}>
                             {String(days).padStart(2, "0")}
                             <p className="text-xs font-semibold">Days</p>

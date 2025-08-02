@@ -17,13 +17,13 @@ export const authApi = createApi({
     }),
     loginUser: build.mutation({
       query: (payload) => ({
-        url: '/auth/login/',
+        url: '/user/login',
         method: 'POST', 
         body: payload,
       }),
     }),
     getUser: build.query({
-        query: () => "/user/",
+        query: () => "/user/me",
         providesTags: ["User"]
     })
   }),

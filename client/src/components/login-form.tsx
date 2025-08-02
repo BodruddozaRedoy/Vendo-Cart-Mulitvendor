@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Link } from "react-router"
 import { useLoginUserMutation } from "@/redux/features/auth/authApi"
 import { useState } from "react"
+import { toast } from "sonner"
 
 export function LoginForm({
   className,
@@ -17,13 +18,20 @@ export function LoginForm({
     password: ""
   })
   // console.log(loginData)
-  const handleLogin = (e:any) => {
+  const handleLogin = (e: any) => {
     e.preventDefault()
     try {
       loginUser(loginData)
+      if (result.isSuccess) {
+        toast.success("Logged in Successfully")
+      }
+      if (result.isError) {
+        toast.error("Invalid Credentials")
+      }
       console.log(result)
     } catch (error) {
-      
+      console.log(error)
+      toast.error("Something went wrong")
     }
   }
   return (
@@ -43,7 +51,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  onChange={(e) => setLoginData({...loginData, email:e.target.value})}
+                  onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                   placeholder="m@example.com"
                   required
                 />
@@ -58,10 +66,12 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required onChange={(e) => setLoginData({...loginData, password:e.target.value})} />
+                <Input id="password" type="password" required onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" disabled={result.isLoading} className="w-full">
+                {
+                  result.isLoading ? <div className="w-12 text-background"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,23a9.63,9.63,0,0,1-8-9.5,9.51,9.51,0,0,1,6.79-9.1A1.66,1.66,0,0,0,12,2.81h0a1.67,1.67,0,0,0-1.94-1.64A11,11,0,0,0,12,23Z"><animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"></animateTransform></path></svg></div> : "Login"
+                }
               </Button>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
@@ -107,7 +117,7 @@ export function LoginForm({
           </form>
           <div className="bg-muted relative hidden md:block">
             <img
-              src="/placeholder.svg"
+              src="https://cdn2.hubspot.net/hubfs/3365633/iStock-1051616786.jpg"
               alt="Image"
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
             />
