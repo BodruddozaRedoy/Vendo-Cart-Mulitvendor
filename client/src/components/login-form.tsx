@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link, useNavigate } from "react-router"
 import { useLoginUserMutation } from "@/redux/features/auth/authApi"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 export function LoginForm({
@@ -23,19 +23,22 @@ export function LoginForm({
     e.preventDefault()
     try {
       loginUser(loginData)
-      if (result.isSuccess) {
-        toast.success("Logged in Successfully")
-        navigate("/")
-      }
-      if (result.isError) {
-        toast.error("Invalid Credentials")
-      }
       console.log(result)
     } catch (error) {
       console.log(error)
       toast.error("Something went wrong")
     }
   }
+  useEffect(() => {
+    if (result.isSuccess) {
+      toast.success("Logged in Successfully");
+      navigate("/");
+    }
+
+    if (result.isError) {
+      toast.error("Invalid Credentials");
+    }
+  }, [result.isSuccess, result.isError, navigate]);
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">

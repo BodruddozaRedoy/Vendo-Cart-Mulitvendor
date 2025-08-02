@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,9 +21,11 @@ import { IoLanguage } from "react-icons/io5";
 import LoginPage from "@/pages/Login/LoginPage";
 import { Button } from "@/components/ui/button";
 import { RiLoginBoxFill } from "react-icons/ri";
-import { useGetUserQuery, useLoginUserMutation, useLogoutMutation } from "@/redux/features/auth/authApi";
+import { authApi, useGetUserQuery, useLoginUserMutation, useLogoutMutation } from "@/redux/features/auth/authApi";
 import { useGetProfile } from "@/hooks/useGetProfile";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut, setUser } from "@/redux/features/auth/authSlice";
 
 
 // top nav links 
@@ -115,7 +117,7 @@ const TopNavbar = () => {
         </Select>
         <Select>
           <SelectTrigger size="sm" className="w-[110px] text-xs h-[40px] text-primary font-semibold">
-            <SelectValue  placeholder="Currency" />
+            <SelectValue placeholder="Currency" />
           </SelectTrigger>
           <SelectContent >
             <SelectItem className="text-xs text-primary font-semibold" value="usd">USD</SelectItem>
@@ -134,14 +136,21 @@ const MainNavbar = () => {
   const [selectCategory, setSelectCategory] = useState("All Categories")
   const [toggleCategory, setToggleCategory] = useState(false)
   const [logout, result] = useLogoutMutation()
-  const {user} = useGetProfile()
+  // const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
 
-  const handleLogout = () => {
-    logout(null)
-    if(result.isSuccess){
+  const dispatch = useDispatch()
+  const { user } = useGetProfile()
+
+  const handleLogout = async () => {
+    await logout(null).unwrap()
+    dispatch(authApi.util.resetApiState())
+    dispatch(logOut())
+    if (result.isSuccess) {
       toast.success("Logged Out")
     }
   }
+
+  
 
   return (
     <div className="flex items-center justify-between px-5 lg:px-20 py-5 border-b">
@@ -153,16 +162,16 @@ const MainNavbar = () => {
       <div className="hidden lg:flex z-50">
         {/* select container  */}
         <div className="py-2  px-5 border-y border-l rounded-l-lg relative">
-          <p onClick={() => setToggleCategory(!toggleCategory)} className="flex items-center gap-2 cursor-pointer select-none"><p className="w-[120px] truncate">{selectCategory}</p><TiArrowSortedDown/></p>
+          <p onClick={() => setToggleCategory(!toggleCategory)} className="flex items-center gap-2 cursor-pointer select-none"><p className="w-[120px] truncate">{selectCategory}</p><TiArrowSortedDown /></p>
           {
             toggleCategory && (
-              <div  className={` absolute top-10 left-2 border py-3 px-3  space-y-2 bg-white max-h-[400px] overflow-y-auto`}>
-            {
-              categories.map((category, i) => (
-                <p onClick={() => { setSelectCategory(category.value); setToggleCategory(false) }} key={i} className="py-1 px-3 pr-20 hover:bg-primary hover:text-background text-primary cursor-pointer select-none">{category.label}</p>
-              ))
-            }
-          </div>
+              <div className={` absolute top-10 left-2 border py-3 px-3  space-y-2 bg-white max-h-[400px] overflow-y-auto`}>
+                {
+                  categories.map((category, i) => (
+                    <p onClick={() => { setSelectCategory(category.value); setToggleCategory(false) }} key={i} className="py-1 px-3 pr-20 hover:bg-primary hover:text-background text-primary cursor-pointer select-none">{category.label}</p>
+                  ))
+                }
+              </div>
             )
           }
         </div>
@@ -182,19 +191,19 @@ const MainNavbar = () => {
         {/* account  */}
         {
           user ? <DropdownMenu>
-          <DropdownMenuTrigger className="flex gap-2 items-center font-semibold text-primary cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all"><img className="w-5" src="/public/account.svg" alt="" /> Account</DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel className="cursor-pointer">My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem><Link to={"/account/profile"}>Profile</Link></DropdownMenuItem>
-            <DropdownMenuItem><Link to={"account/order-tracking"}>Order Tracking</Link></DropdownMenuItem>
-            <DropdownMenuItem><Link to={"/account/my-orders"}>My Orders</Link></DropdownMenuItem>
-            <DropdownMenuItem><Link to={"/account/settings"}>Settings</Link></DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> : (
-          <Link to={"/login"}><Button variant={"outline"}><RiLoginBoxFill /> Login</Button></Link>
-        )
+            <DropdownMenuTrigger className="flex gap-2 items-center font-semibold text-primary cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all"><img className="w-5" src="/public/account.svg" alt="" /> Account</DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel className="cursor-pointer">My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem><Link to={"/account/profile"}>Profile</Link></DropdownMenuItem>
+              <DropdownMenuItem><Link to={"account/order-tracking"}>Order Tracking</Link></DropdownMenuItem>
+              <DropdownMenuItem><Link to={"/account/my-orders"}>My Orders</Link></DropdownMenuItem>
+              <DropdownMenuItem><Link to={"/account/settings"}>Settings</Link></DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu> : (
+            <Link to={"/login"}><Button variant={"outline"}><RiLoginBoxFill /> Login</Button></Link>
+          )
         }
         {/* wishlist  */}
         <div className="flex gap-2 items-center text-primary font-semibold cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all">
@@ -209,7 +218,7 @@ const MainNavbar = () => {
 
         {/* mobile bars  */}
       </div>
-        <HiMiniBars3CenterLeft className="flex lg:hidden font-bold text-2xl"/>
+      <HiMiniBars3CenterLeft className="flex lg:hidden font-bold text-2xl" />
     </div>
   )
 }
