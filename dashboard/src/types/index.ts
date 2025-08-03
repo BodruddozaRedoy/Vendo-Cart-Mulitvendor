@@ -27,7 +27,7 @@ export interface IProduct {
     price: number,
     subcategory: string,
     discount: number,
-    inStock: boolean,
+    quantity: number,
     rating: number,
     reviewsCount: number,
     colors: string[],

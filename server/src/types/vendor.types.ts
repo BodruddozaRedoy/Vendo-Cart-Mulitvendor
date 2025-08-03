@@ -10,7 +10,7 @@ export interface IVendor {
   address: string;
   contactMail: string;
   joinedAt?: Date;
-  products?: IProduct[] | string[];
+  products?: Types.ObjectId[];
   owner: Types.ObjectId; // User ID
   createdAt?: Date;
   updatedAt?: Date;

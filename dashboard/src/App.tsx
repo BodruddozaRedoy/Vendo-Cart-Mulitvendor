@@ -18,11 +18,12 @@ import { store } from "./redux/store"
 import Login from "./pages/Login"
 import { useGetProfile } from "./hooks/useGetProfile"
 import Loading from "./components/Loading"
+import UpdateProduct from "./pages/UpdateProduct"
 
 const queryClient = new QueryClient()
 
 const App = () => {
-  const { user, isLoading } = useGetProfile()
+  const { isLoading } = useGetProfile()
 
   if (isLoading) return <div className="w-screen h-screen flex items-center justify-center"><Loading /></div>
 
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/products" element={<Products />} />
               <Route path="/product/add-product" element={<AddProduct />} />
+              <Route path="/product/update-product/:id" element={<UpdateProduct/>}/>
               <Route path="/orders" element={<Orders />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/customers" element={<Customers />} />

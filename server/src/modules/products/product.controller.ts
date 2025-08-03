@@ -18,7 +18,7 @@ export const addProduct = async (req: Request, res: Response) => {
       price,
       subcategory,
       discount,
-      inStock,
+      quantity,
       colors,
       images,
       features,
@@ -42,7 +42,7 @@ export const addProduct = async (req: Request, res: Response) => {
       price,
       subcategory,
       discount,
-      inStock,
+      quantity,
       colors,
       images,
       features,
@@ -55,7 +55,7 @@ export const addProduct = async (req: Request, res: Response) => {
     await newProduct.save();
 
     // Add product reference to vendor's products array (optional)
-    vendor.products!.push(newProduct._id);
+    vendor.products?.push(new mongoose.Types.ObjectId(newProduct._id));
     await vendor.save();
 
     return res.status(201).json({ message: 'Product added successfully', data: newProduct });
@@ -105,6 +105,8 @@ export const updateProduct = async (req: Request, res: Response) => {
     const userId = req.user._id;
     const userRole = req.user.role;
     const updates = req.body;
+    // console.log(userId)
+    // console.log(userRole)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid product ID' });
@@ -116,7 +118,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     }
 
     // Check if user is admin or vendor owner
-    if (userRole !== 'admin' && product.vendor.toString() !== userId) {
+    if (userRole !== 'admin' && userRole !== 'vendor' && product.vendor.toString() !== userId) {
       return res.status(403).json({ message: 'You do not have permission to update this product' });
     }
 
@@ -145,7 +147,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    if (userRole !== 'admin' && product.vendor.toString() !== userId) {
+    if (userRole !== 'admin' && userRole !== "vendor" && product.vendor.toString() !== userId) {
       return res.status(403).json({ message: 'You do not have permission to delete this product' });
     }
 

@@ -114,9 +114,9 @@ export function LoginForm({
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <Link to={`${import.meta.env.FRONTEND_URL}/register`} className="underline underline-offset-4">
+                <a href={`${import.meta.env.VITE_FRONTEND_URL}/register`} className="underline underline-offset-4">
                   Sign up
-                </Link>
+                </a>
               </div>
             </div>
           </form>

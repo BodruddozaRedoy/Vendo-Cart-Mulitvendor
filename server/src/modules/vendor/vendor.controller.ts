@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { Vendor } from './vendor.model';
 import { Product } from '../products/product.model';
+import { User } from '../user/user.model';
 
 // Register a new vendor
 export const registerVendor = async (req: Request, res: Response) => {
@@ -17,6 +18,12 @@ export const registerVendor = async (req: Request, res: Response) => {
     const existingVendor = await Vendor.findOne({ owner });
     if (existingVendor) {
       return res.status(400).json({ message: 'Vendor already registered for this owner.' });
+    }
+
+    // Update user role to 'vendor'
+    const updatedUser = await User.findByIdAndUpdate(owner, { role: 'vendor' }, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found to assign vendor role.' });
     }
 
     const newVendor = await Vendor.create({

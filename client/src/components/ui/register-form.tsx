@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router"
+import { Link, Navigate, useNavigate } from "react-router"
 import { useState } from "react"
 import { useRegisterUserMutation } from "@/redux/features/auth/authApi"
 import { toast } from "sonner"
@@ -17,25 +17,21 @@ export function RegisterForm({
         email: "",
         password: ""
     })
+    const navigate = useNavigate()
     const [registerUser, result] = useRegisterUserMutation()
     console.log(registerData)
-    const handleRegister = (e:any) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log("form data", registerData)
         try {
-            registerUser(registerData)
-            if(result.isSuccess){
-                toast.success("User Registered Successfully")
-            }
-            if(result.isError){
-                toast.error("User already Registered. Please Sign In")
-            }
-            console.log(result)
-        } catch (error) {
-            console.log(error)
-            toast.error("Something went wrong")
+            const response = await registerUser(registerData).unwrap()
+            toast.success("User Registered Successfully")
+            navigate("/login")
+        } catch (error: any) {
+            console.error(error)
+            toast.error(error?.data?.message || "User already registered. Please sign in.")
         }
     }
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card className="overflow-hidden p-0">

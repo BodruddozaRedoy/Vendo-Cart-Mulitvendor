@@ -1,9 +1,9 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IProduct } from '../../types/product.types';
 
-interface IProductModel extends IProduct, Document {}
+// interface IProductModel extends IProduct, Document {}
 
-const productSchema = new Schema<IProductModel>({
+const productSchema = new Schema<IProduct>({
   name: { type: String, required: true },
   image: { type: String, required: true },
   category: { type: String, required: true },
@@ -12,7 +12,7 @@ const productSchema = new Schema<IProductModel>({
   price: { type: Number, required: true },
   subcategory: { type: String },
   discount: { type: Number, default: 0 },
-  inStock: { type: Boolean, default: true },
+  quantity: { type: Number, default: true },
   rating: { type: Number, default: 0 },
   reviewsCount: { type: Number, default: 0 },
   colors: [{ type: String }],
@@ -26,4 +26,4 @@ const productSchema = new Schema<IProductModel>({
   timestamps: true
 });
 
-export const Product = mongoose.model<IProductModel>('Product', productSchema);
+export const Product = mongoose.model<IProduct>('Product', productSchema);

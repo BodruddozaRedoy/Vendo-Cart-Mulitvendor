@@ -5,68 +5,20 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Filter, MoreHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { useGetAllProductsByVendorQuery } from "@/redux/features/products/productApi";
+import { useDeleteProductMutation, useGetAllProductsByVendorQuery } from "@/redux/features/products/productApi";
 import { IProduct } from "@/types";
-
-// const products = [
-//   {
-//     id: "PRD-001",
-//     name: "Wireless Bluetooth Headphones",
-//     category: "Electronics",
-//     price: "$299.99",
-//     stock: 45,
-//     status: "active",
-//     image: "🎧"
-//   },
-//   {
-//     id: "PRD-002",
-//     name: "Smart Fitness Watch",
-//     category: "Wearables", 
-//     price: "$199.99",
-//     stock: 23,
-//     status: "active",
-//     image: "⌚"
-//   },
-//   {
-//     id: "PRD-003",
-//     name: "Portable Bluetooth Speaker",
-//     category: "Electronics",
-//     price: "$89.99",
-//     stock: 0,
-//     status: "out_of_stock",
-//     image: "🔊"
-//   },
-//   {
-//     id: "PRD-004",
-//     name: "Wireless Phone Charger",
-//     category: "Accessories",
-//     price: "$24.99",
-//     stock: 67,
-//     status: "active",
-//     image: "📱"
-//   }
-// ];
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "active":
-      return "bg-success text-success-foreground";
-    case "out_of_stock":
-      return "bg-destructive text-destructive-foreground";
-    case "draft":
-      return "bg-muted text-muted-foreground";
-    default:
-      return "bg-muted text-muted-foreground";
-  }
-};
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 const Products = () => {
-  const {data} = useGetAllProductsByVendorQuery(undefined, {
+  const { data } = useGetAllProductsByVendorQuery(undefined, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true
   })
   console.log(data?.data)
+const [deleteProduct, result] = useDeleteProductMutation()
+  
 
   return (
     <DashboardLayout>
@@ -79,10 +31,10 @@ const Products = () => {
             </p>
           </div>
           <Link to={'/product/add-product'}>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Add Product
-          </Button>
+            <Button className="gap-2">
+              <Plus className="w-4 h-4" />
+              Add Product
+            </Button>
           </Link>
         </div>
 
@@ -107,7 +59,8 @@ const Products = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {data?.data?.map((product:IProduct) => (
+              {!data && <div>No products added</div>}
+              {data?.data?.map((product: IProduct) => (
                 <div key={product._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center text-2xl">
@@ -116,26 +69,36 @@ const Products = () => {
                     <div>
                       <div className="flex items-center gap-3 mb-1">
                         <span className="font-medium">{product.name}</span>
-                        {/* <Badge className={getStatusColor(product.status)}>
-                          {product.status.replace("_", " ")}
-                        </Badge> */}
+                        <Badge className={product.quantity ? 'bg-success': "bg-warning"}>
+                          {product.quantity ? 'Available' : "Not Available"}
+                        </Badge>
                       </div>
                       <div className="text-sm text-muted-foreground">
                         {product._id} • {product.category}
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-6">
                     <div className="text-right">
-                      <div className="font-semibold">{product.price}</div>
+                      <div className="font-semibold">${product.price}</div>
                       <div className="text-sm text-muted-foreground">
-                        {product.inStock} in stock
+                        {product.quantity} in stock
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <Link to={`/product/update-product/${product._id}`}><DropdownMenuItem>Update</DropdownMenuItem></Link>
+                        <DropdownMenuItem onClick={() => {deleteProduct(product._id);toast.success("Deleted")}}>Delete</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div>
               ))}

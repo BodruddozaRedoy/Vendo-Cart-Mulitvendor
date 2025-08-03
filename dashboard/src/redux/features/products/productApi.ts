@@ -14,11 +14,12 @@ export const productApi = createApi({
         method: 'POST',
         body: payload,
       }),
+      invalidatesTags: ['Product']
     }),
-    allProducts: build.mutation({
-      query: (payload) => ({
-        url: '/user/login',
-        method: 'POST', 
+    updateProduct: build.mutation({
+      query: ({id,payload}) => ({
+        url: `/${id}`,
+        method: 'PUT', 
         body: payload,
       }),
     }),
@@ -26,13 +27,18 @@ export const productApi = createApi({
         query: () => "/vendor/products",
         providesTags: ["Product"]
     }),
-    logout: build.mutation({
-      query: () => ({
-        url: "/user/logout",
-        method: "POST"
-      }),
+    getAProduct: build.query({
+      query: (id) => `/${id}`,
+      providesTags: ["Product"]
+    }),
+    deleteProduct: build.mutation({
+        query: (id) => ({
+            url: `/${id}`,
+            method: "DELETE",
+        }),
+        invalidatesTags: ['Product']
     })
   }),
 });
 
-export const { useAddProductMutation, useGetAllProductsByVendorQuery } = productApi;
+export const { useAddProductMutation, useGetAllProductsByVendorQuery, useUpdateProductMutation, useGetAProductQuery, useDeleteProductMutation } = productApi;

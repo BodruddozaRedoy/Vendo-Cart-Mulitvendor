@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export interface IProduct {
+  _id?: string;
   name: string;
   image: string;
   category: string;
@@ -9,7 +10,7 @@ export interface IProduct {
   price: number;
   subcategory?: string;
   discount?: number;
-  inStock?: boolean;
+  quantity?: number;
   rating?: number;
   reviewsCount?: number;
   colors?: string[];
@@ -24,6 +25,7 @@ export interface IProduct {
 }
 
 export interface ICreateProduct {
+  _id?: string;
   name: string;
   image: string;
   category: string;
@@ -32,7 +34,7 @@ export interface ICreateProduct {
   price: number;
   subcategory?: string;
   discount?: number;
-  inStock?: boolean;
+  quantity?: number;
   colors?: string[];
   images?: string[];
   features?: string[];
@@ -42,6 +44,7 @@ export interface ICreateProduct {
 }
 
 export interface IUpdateProduct {
+  _id?: string
   name?: string;
   image?: string;
   category?: string;
@@ -50,7 +53,7 @@ export interface IUpdateProduct {
   price?: number;
   subcategory?: string;
   discount?: number;
-  inStock?: boolean;
+  quantity?: boolean;
   colors?: string[];
   images?: string[];
   features?: string[];
