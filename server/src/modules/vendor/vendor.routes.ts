@@ -1,29 +1,19 @@
 import express from 'express';
-// import {
-//   registerVendor,
-//   getVendors,
-//   getVendor,
-//   updateVendor,
-//   deleteVendor,
-//   approveVendor,
-//   getVendorProducts
-// } from './vendor.controller';
-// import { protect, admin, vendor } from '../../middleware/auth.middleware';
-import { registerVendor } from './vendor.controller';
-import { protect, vendor } from '../auth/auth.middleware';
+import { approveVendor, deleteVendor, getVendor, getVendorProducts, getVendors, registerVendor, updateVendor } from './vendor.controller';
+import { admin, protect, vendor } from '../auth/auth.middleware';
 
 const router = express.Router();
 
-// router.post('/', protect, registerVendor);
-// router.get('/', getVendors);
-// router.get('/:id', getVendor);
-// router.get('/:id/products', getVendorProducts);
+router.post('/', protect, registerVendor);
+router.get('/', getVendors);
+router.get('/:id', getVendor);
+router.get('/products/:id', getVendorProducts);
 
-// // Vendor routes
-// router.put('/', protect, vendor, updateVendor);
-// router.delete('/', protect, vendor, deleteVendor);
+// Vendor routes
+router.put('/:id', protect, vendor, updateVendor);
+router.delete('/:id', protect, vendor, deleteVendor);
 
-// // Admin routes
-// router.put('/:id/approve', protect, admin, approveVendor);
+// Admin routes
+router.put('/approve/:id', protect, admin, approveVendor);
 
 export default router;

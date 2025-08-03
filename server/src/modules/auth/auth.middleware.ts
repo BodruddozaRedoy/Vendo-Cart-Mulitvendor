@@ -22,7 +22,7 @@ declare global {
 // Protect routes
 export const protect = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   let token;
-  console.log(req.cookies.token, "token")
+  // console.log(req.cookies.token, "token")
 
   if (req.cookies.token) {
     token = req.cookies.token;

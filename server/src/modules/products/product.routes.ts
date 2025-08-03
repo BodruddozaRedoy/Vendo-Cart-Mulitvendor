@@ -1,12 +1,7 @@
 import express from 'express';
-import {
-  createProduct,
-  getProducts,
-  getProduct,
-  updateProduct,
-  deleteProduct
-} from './product.controller';
+
 import { admin, protect, vendor } from '../auth/auth.middleware';
+import { addProduct, deleteProduct, getProduct, getProducts, updateProduct } from './product.controller';
 // import { protect, admin, vendor } from '../../middleware/auth.middleware';
 
 const router = express.Router();
@@ -15,7 +10,7 @@ router.get('/', getProducts);
 router.get('/:id', getProduct);
 
 // Vendor and Admin routes
-router.post('/', protect, vendor, createProduct);
+router.post('/', protect, vendor, addProduct);
 router.put('/:id', protect, vendor, updateProduct);
 router.delete('/:id', protect, vendor, deleteProduct);
 

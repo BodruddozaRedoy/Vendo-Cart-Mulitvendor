@@ -1,170 +1,161 @@
 import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-// import Product from '../../models/product.model';
-import { AppError } from '../../middleware/error.middleware';
-import { IProduct, ICreateProduct, IUpdateProduct } from '../../types/product.types';
+import mongoose from 'mongoose';
+import { Vendor } from '../vendor/vendor.model';
 import { Product } from './product.model';
 
-// @desc    Create a product
-// @route   POST /api/v1/products
-// @access  Private (vendor/admin)
-export const createProduct = asyncHandler(async (req: Request, res: Response) => {
-  const { name, image, category, description, brand, price }: ICreateProduct = req.body;
 
-  // Check if vendor exists
-  if (!req.user) {
-    throw new AppError('Vendor not authenticated', 401);
-  }
+// Add a new product (only vendor can add product)
+export const addProduct = async (req: Request, res: Response) => {
+  try {
+    const vendorId = req.user._id; // assume vendor's user ID from auth middleware
+    console.log(vendorId)
+    const {
+      name,
+      image,
+      category,
+      description,
+      brand,
+      price,
+      subcategory,
+      discount,
+      inStock,
+      colors,
+      images,
+      features,
+      warranty,
+      shipping,
+      tags,
+    } = req.body;
 
-  // Basic validation
-  if (!name || !image || !category || !description || !brand || !price) {
-    throw new AppError('Please include all required fields', 400);
-  }
-
-  const product = await Product.create({
-    name,
-    image,
-    category,
-    description,
-    brand,
-    price,
-    vendor: req.user._id,
-    ...req.body // Include other optional fields
-  });
-
-  res.status(201).json({
-    success: true,
-    data: product
-  });
-});
-
-// @desc    Get all products
-// @route   GET /api/v1/products
-// @access  Public
-export const getProducts = asyncHandler(async (req: Request, res: Response) => {
-  // Filtering
-  const queryObj = { ...req.query };
-  const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  excludedFields.forEach(el => delete queryObj[el]);
-
-  // Advanced filtering
-  let queryStr = JSON.stringify(queryObj);
-  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-
-  let query = Product.find(JSON.parse(queryStr)).populate('vendor', 'name logo');
-
-  // Sorting
-  if (req.query.sort) {
-    const sortBy = (req.query.sort as string).split(',').join(' ');
-    query = query.sort(sortBy);
-  } else {
-    query = query.sort('-createdAt');
-  }
-
-  // Field limiting
-  if (req.query.fields) {
-    const fields = (req.query.fields as string).split(',').join(' ');
-    query = query.select(fields);
-  } else {
-    query = query.select('-__v');
-  }
-
-  // Pagination
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 25;
-  const skip = (page - 1) * limit;
-
-  query = query.skip(skip).limit(limit);
-
-  const products = await query;
-
-  res.status(200).json({
-    success: true,
-    count: products.length,
-    data: products
-  });
-});
-
-// @desc    Get single product
-// @route   GET /api/v1/products/:id
-// @access  Public
-export const getProduct = asyncHandler(async (req: Request, res: Response) => {
-  const product = await Product.findById(req.params.id).populate('vendor', 'name logo rating');
-
-  if (!product) {
-    throw new AppError('Product not found', 404);
-  }
-
-  res.status(200).json({
-    success: true,
-    data: product
-  });
-});
-
-// @desc    Update product
-// @route   PUT /api/v1/products/:id
-// @access  Private (vendor/admin)
-export const updateProduct = asyncHandler(async (req: Request, res: Response) => {
-  const { name, price, description }: IUpdateProduct = req.body;
-
-  const product = await Product.findById(req.params.id);
-
-  if (!product) {
-    throw new AppError('Product not found', 404);
-  }
-
-  // Check ownership (vendor can only update their own products)
-  if (product.vendor.toString() !== req.user?._id.toString() && req.user?.role !== 'admin') {
-    throw new AppError('Not authorized to update this product', 401);
-  }
-
-  const updatedProduct = await Product.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-      runValidators: true
+    // Check if user is a vendor and owns a vendor record
+    const vendor = await Vendor.findOne({ owner: vendorId });
+    if (!vendor) {
+      return res.status(403).json({ message: 'Only registered vendors can add products' });
     }
-  );
 
-  res.status(200).json({
-    success: true,
-    data: updatedProduct
-  });
-});
+    const newProduct = new Product({
+      name,
+      image,
+      category,
+      description,
+      brand,
+      price,
+      subcategory,
+      discount,
+      inStock,
+      colors,
+      images,
+      features,
+      warranty,
+      shipping,
+      tags,
+      vendor: vendor._id,
+    });
 
-// @desc    Delete product
-// @route   DELETE /api/v1/products/:id
-// @access  Private (vendor/admin)
-export const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
-  const product = await Product.findById(req.params.id);
+    await newProduct.save();
 
-  if (!product) {
-    throw new AppError('Product not found', 404);
+    // Add product reference to vendor's products array (optional)
+    vendor.products!.push(newProduct._id);
+    await vendor.save();
+
+    return res.status(201).json({ message: 'Product added successfully', data: newProduct });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server Error', error });
   }
+};
 
-  // Check ownership (vendor can only delete their own products)
-  if (product.vendor.toString() !== req.user?._id.toString() && req.user?.role !== 'admin') {
-    throw new AppError('Not authorized to delete this product', 401);
+// Get all products (public)
+export const getProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await Product.find().populate('vendor', 'name');
+    return res.status(200).json({ data: products });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server Error', error });
   }
+};
 
-  await product.deleteOne();
+// Get single product by ID (public)
+export const getProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
 
-  res.status(200).json({
-    success: true,
-    data: {}
-  });
-});
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid product ID' });
+    }
 
-// @desc    Get products by vendor
-// @route   GET /api/v1/products/vendor/:vendorId
-// @access  Public
-export const getProductsByVendor = asyncHandler(async (req: Request, res: Response) => {
-  const products = await Product.find({ vendor: req.params.vendorId });
+    const product = await Product.findById(id).populate('vendor', 'name');
 
-  res.status(200).json({
-    success: true,
-    count: products.length,
-    data: products
-  });
-});
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    return res.status(200).json({ data: product });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server Error', error });
+  }
+};
+
+// Update product (vendor owner or admin)
+export const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const userRole = req.user.role;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid product ID' });
+    }
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Check if user is admin or vendor owner
+    if (userRole !== 'admin' && product.vendor.toString() !== userId) {
+      return res.status(403).json({ message: 'You do not have permission to update this product' });
+    }
+
+    Object.assign(product, updates);
+    await product.save();
+
+    return res.status(200).json({ message: 'Product updated successfully', data: product });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server Error', error });
+  }
+};
+
+// Delete product (vendor owner or admin)
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const userRole = req.user.role;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid product ID' });
+    }
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    if (userRole !== 'admin' && product.vendor.toString() !== userId) {
+      return res.status(403).json({ message: 'You do not have permission to delete this product' });
+    }
+
+    await product.deleteOne();
+
+    // Optional: remove product reference from vendor.products
+    await Vendor.findByIdAndUpdate(product.vendor, {
+      $pull: { products: product._id }
+    });
+
+    return res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server Error', error });
+  }
+};
