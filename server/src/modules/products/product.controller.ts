@@ -67,6 +67,7 @@ export const addProduct = async (req: Request, res: Response) => {
 
 // Get all products (public)
 export const getProducts = async (req: Request, res: Response) => {
+
   try {
     const products = await Product.find().populate('vendor', 'name');
     return res.status(200).json({ data: products });
@@ -77,6 +78,7 @@ export const getProducts = async (req: Request, res: Response) => {
 
 // Get single product by ID (public)
 export const getProduct = async (req: Request, res: Response) => {
+
   try {
     const { id } = req.params;
 
@@ -159,3 +161,27 @@ export const deleteProduct = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Server Error', error });
   }
 };
+
+// Get all products by a specific vendor (only the vendor can access their products)
+export const getAllProductsByVendor = async (req: Request, res: Response) => {
+  console.log("heello")
+  try {
+  console.log("heello inside")
+
+    const vendorId = req.user._id;
+    console.log(vendorId)
+
+    // Ensure the user is actually a vendor
+    const vendor = await Vendor.findOne({ owner: vendorId });
+    if (!vendor) {
+      return res.status(403).json({ message: "Access denied. You are not a registered vendor." });
+    }
+
+    const products = await Product.find({ vendor: vendor._id }).populate('vendor', 'name');
+
+    return res.status(200).json({ data: products });
+  } catch (error) {
+    return res.status(500).json({ message: "Server Error", error });
+  }
+};
+

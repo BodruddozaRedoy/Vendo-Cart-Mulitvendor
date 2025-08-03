@@ -11,6 +11,7 @@ import userRoutes from './modules/user/user.routes';
 import vendorRoutes from './modules/vendor/vendor.routes';
 import productRoutes from './modules/products/product.routes';
 import { errorMiddleware } from './middleware/error.middleware';
+import env from './config/env';
 // Import other routes...
 
 const app = express();
@@ -19,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: [env.FRONTEND_URL, env.DASHBOARD_URL!],
   credentials: true
 }));
 

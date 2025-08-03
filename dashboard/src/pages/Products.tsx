@@ -4,45 +4,48 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Filter, MoreHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import { useGetAllProductsByVendorQuery } from "@/redux/features/products/productApi";
+import { IProduct } from "@/types";
 
-const products = [
-  {
-    id: "PRD-001",
-    name: "Wireless Bluetooth Headphones",
-    category: "Electronics",
-    price: "$299.99",
-    stock: 45,
-    status: "active",
-    image: "🎧"
-  },
-  {
-    id: "PRD-002",
-    name: "Smart Fitness Watch",
-    category: "Wearables", 
-    price: "$199.99",
-    stock: 23,
-    status: "active",
-    image: "⌚"
-  },
-  {
-    id: "PRD-003",
-    name: "Portable Bluetooth Speaker",
-    category: "Electronics",
-    price: "$89.99",
-    stock: 0,
-    status: "out_of_stock",
-    image: "🔊"
-  },
-  {
-    id: "PRD-004",
-    name: "Wireless Phone Charger",
-    category: "Accessories",
-    price: "$24.99",
-    stock: 67,
-    status: "active",
-    image: "📱"
-  }
-];
+// const products = [
+//   {
+//     id: "PRD-001",
+//     name: "Wireless Bluetooth Headphones",
+//     category: "Electronics",
+//     price: "$299.99",
+//     stock: 45,
+//     status: "active",
+//     image: "🎧"
+//   },
+//   {
+//     id: "PRD-002",
+//     name: "Smart Fitness Watch",
+//     category: "Wearables", 
+//     price: "$199.99",
+//     stock: 23,
+//     status: "active",
+//     image: "⌚"
+//   },
+//   {
+//     id: "PRD-003",
+//     name: "Portable Bluetooth Speaker",
+//     category: "Electronics",
+//     price: "$89.99",
+//     stock: 0,
+//     status: "out_of_stock",
+//     image: "🔊"
+//   },
+//   {
+//     id: "PRD-004",
+//     name: "Wireless Phone Charger",
+//     category: "Accessories",
+//     price: "$24.99",
+//     stock: 67,
+//     status: "active",
+//     image: "📱"
+//   }
+// ];
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -58,6 +61,13 @@ const getStatusColor = (status: string) => {
 };
 
 const Products = () => {
+  const {data} = useGetAllProductsByVendorQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true
+  })
+  console.log(data?.data)
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -68,10 +78,12 @@ const Products = () => {
               Manage your product catalog and inventory
             </p>
           </div>
+          <Link to={'/product/add-product'}>
           <Button className="gap-2">
             <Plus className="w-4 h-4" />
             Add Product
           </Button>
+          </Link>
         </div>
 
         <Card>
@@ -95,21 +107,21 @@ const Products = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {products.map((product) => (
-                <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+              {data?.data?.map((product:IProduct) => (
+                <div key={product._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center text-2xl">
-                      {product.image}
+                      <img src={product.image} alt="" />
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-1">
                         <span className="font-medium">{product.name}</span>
-                        <Badge className={getStatusColor(product.status)}>
+                        {/* <Badge className={getStatusColor(product.status)}>
                           {product.status.replace("_", " ")}
-                        </Badge>
+                        </Badge> */}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {product.id} • {product.category}
+                        {product._id} • {product.category}
                       </div>
                     </div>
                   </div>
@@ -118,7 +130,7 @@ const Products = () => {
                     <div className="text-right">
                       <div className="font-semibold">{product.price}</div>
                       <div className="text-sm text-muted-foreground">
-                        {product.stock} in stock
+                        {product.inStock} in stock
                       </div>
                     </div>
                     <Button variant="ghost" size="icon">

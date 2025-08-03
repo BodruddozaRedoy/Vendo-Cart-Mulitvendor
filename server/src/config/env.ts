@@ -8,7 +8,8 @@ const env = {
   MONGO_URI: process.env.MONGO_URI || '',
   JWT_SECRET: process.env.JWT_SECRET || 'your-secret-key',
   JWT_EXPIRE: process.env.JWT_EXPIRE || '30d',
-  CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000'
+  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
+  DASHBOARD_URL: process.env.DASHBOARD_URL || 'http://localhost:8080'
 };
 
 export default env;
