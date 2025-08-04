@@ -4,10 +4,12 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
-import { categories } from "@/pages/Home/components/FeaturedCategories"
+import useGetAllCategories from "@/hooks/useGetAllCategories"
 import type { ICategories } from "@/types"
 
 export default function ProductCategories() {
+      const { categories, isLoading } = useGetAllCategories()
+    
     return (
         <div className="shadow-md rounded-lg">
             <h1 className="text-primary p-5 font-semibold">Product Categories</h1>
@@ -19,7 +21,7 @@ export default function ProductCategories() {
                 defaultValue="item-1"
             >
                 {
-                    categories.map((cat: ICategories, index:number) => (
+                    categories?.data?.map((cat: ICategories, index:number) => (
                         <AccordionItem key={index} value={`category-${index}`}>
                             <AccordionTrigger> <div className="flex items-center justify-between w-full"><p>{cat.name}</p> <div className="bg-muted p-1 rounded-lg">{cat?.subcategories?.length}</div></div></AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">

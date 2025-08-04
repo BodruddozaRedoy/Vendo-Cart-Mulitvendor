@@ -14,13 +14,15 @@ import { VscSettings } from "react-icons/vsc";
 import { IoGrid } from "react-icons/io5";
 import { FaBarsProgress } from "react-icons/fa6";
 import { useState } from "react";
-import { products } from "@/pages/Home/components/BestSellers";
 import ProductCardPrimary from "@/components/common/ProductCardPrimary";
 import ProductCardSecondary from "@/components/common/ProductCardSecondary";
+import useGetAllProducts from "@/hooks/useGetAllProducts";
+import type { IProduct } from "@/types";
 
 
 
 export default function ShopContainer() {
+    const {products} = useGetAllProducts()
     const [productLayout, setProductLayout] = useState("grid")
     return (
         <div className="space-y-5 text-primary">
@@ -73,7 +75,7 @@ export default function ShopContainer() {
             {
                 productLayout === "grid" && <div className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
                     {
-                        products?.map((product, index) => (
+                        products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardPrimary product={product} key={index} />
                         ))
                     }

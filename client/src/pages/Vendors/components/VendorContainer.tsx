@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { vendors } from '@/pages/Home/components/BestSellers'
 import React, { useState } from 'react'
 import { FaBarsProgress } from 'react-icons/fa6'
 import { IoGrid } from 'react-icons/io5'

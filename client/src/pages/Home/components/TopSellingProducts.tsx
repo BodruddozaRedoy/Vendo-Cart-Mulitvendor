@@ -3,11 +3,11 @@ import { useRef, useState } from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Grid, Navigation, Pagination } from 'swiper/modules';
-import { products } from './BestSellers';
 import ProductCardSecondary from '@/components/common/ProductCardSecondary';
 import type { IProduct } from '@/types';
 
 import 'swiper/swiper-bundle.css'; // For all Swiper styles
+import useGetAllProducts from '@/hooks/useGetAllProducts';
 
 // Import Swiper styles
 // import 'swiper/css';
@@ -17,6 +17,7 @@ import 'swiper/swiper-bundle.css'; // For all Swiper styles
 // import 'swiper/css/autoplay';
 
 export default function TopSellingProducts() {
+  const {products} = useGetAllProducts()
   const prevRef = useRef<HTMLDivElement | null>(null);
   const nextRef = useRef<HTMLDivElement | null>(null);
   const [swiperReady, setSwiperReady] = useState(false);
@@ -81,7 +82,7 @@ export default function TopSellingProducts() {
               setSwiperReady(true);
             }}
           >
-            {products.map((product: IProduct, index: number) => (
+            {products?.data?.map((product: IProduct, index: number) => (
               <SwiperSlide key={index} className="!h-auto">
                 <div className="h-full">
                   <ProductCardSecondary product={product} />
