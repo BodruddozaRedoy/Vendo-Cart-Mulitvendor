@@ -21,5 +21,5 @@ export const useGetProfile = () => {
             dispatch(logOut())
         }
     },[user, isError, dispatch, data])
-    return {user, isLoading}
+    return {data, isLoading}
 }

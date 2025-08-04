@@ -28,7 +28,7 @@ export default function ShopContainer() {
         <div className="space-y-5 text-primary">
             {/* header  */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <Button className="bg-primary/10 text-primary gap-2 hover:text-white hidden lg:block">
+                <Button className="bg-primary/10 text-primary gap-2 hover:text-white hidden lg:flex">
                     <VscSettings /> All Filters
                 </Button>
                 <div className="flex items-center justify-center lg:justify-end gap-4 h-8 w-full">
@@ -85,7 +85,7 @@ export default function ShopContainer() {
             {
                 productLayout === "bars" && <div className="flex flex-col gap-5">
                     {
-                        products?.map((product, index) => (
+                        products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardSecondary button={true} product={product} key={index} />
                         ))
                     }

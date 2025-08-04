@@ -15,9 +15,17 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import { useGetAllVendorQuery } from '@/redux/features/vendor/vendorApi'
+import type { IVendor } from '@/types'
 
 export default function VendorContainer() {
     const [productLayout, setProductLayout] = useState("grid")
+    const {data:vendors} = useGetAllVendorQuery(undefined, {
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+        refetchOnReconnect: true
+    })
+    console.log(vendors)
     return (
         <div className='space-y-5 text-primary'>
             {/* header  */}
@@ -68,7 +76,7 @@ export default function VendorContainer() {
             <Separator className="w-full" />
             <div className='grid grid-cols-2 lg:grid-cols-3 gap-5'>
                 {
-                    vendors?.map((vendor, index) => (
+                    vendors?.data?.map((vendor:IVendor, index:number) => (
                         <VendorCard vendor={vendor} key={index} />
                     ))
                 }

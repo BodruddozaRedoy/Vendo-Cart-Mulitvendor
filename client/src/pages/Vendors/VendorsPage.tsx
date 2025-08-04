@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import Features from '../Home/components/Feature'
 import VendorContainer from './components/VendorContainer'
 import VendorFilter from './components/VendorFilter'
+import { Link } from 'react-router'
 
 export default function VendorsPage() {
   return (
@@ -24,9 +25,11 @@ export default function VendorsPage() {
           <Button variant="ghost" size="sm" className='text-sm hidden sm:inline-flex'>
             Become an Affiliate
           </Button>
+          <Link to={"/open-a-shop"}>
           <Button size="sm" className='text-sm w-full sm:w-auto'>
             Open a Shop
           </Button>
+          </Link>
         </div>
       </div>
 

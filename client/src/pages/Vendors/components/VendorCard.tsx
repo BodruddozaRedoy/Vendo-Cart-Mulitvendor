@@ -34,7 +34,7 @@ export default function VendorCard({ vendor }: { vendor: IVendor }) {
                 {/* Right Section - Products & Join Date */}
                 <div className='flex flex-col items-end gap-2 sm:gap-3 w-full sm:w-auto'>
                     <div className='py-1 px-2 bg-muted rounded text-xs sm:text-sm w-full sm:w-auto text-center'>
-                        {'360'} Products
+                        {vendor.products.length} Products
                     </div>
                     <p className='text-xs text-muted-foreground'>
                         Member since {joinedYear}

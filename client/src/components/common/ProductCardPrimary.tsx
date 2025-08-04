@@ -3,7 +3,7 @@ import { FaStar } from "react-icons/fa";
 
 export default function ProductCardPrimary({ product }: { product: IProduct }) {
   return (
-    <div className='bg-background shadow-md flex flex-col items-center rounded-lg text-primary relative w-full max-w-xs sm:max-w-sm md:max-w-md'>
+    <div className='bg-background shadow border flex flex-col items-center rounded-lg text-primary relative w-full max-w-xs sm:max-w-sm md:max-w-md'>
       <img
         className='w-full max-w-[240px] h-40 sm:h-48 mt-6 object-contain'
         src={product.image}

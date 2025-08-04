@@ -56,7 +56,8 @@ export default function FeaturedCategories() {
     <div>
       <SectionTitle title={"Featured Categories"} description={"Choose your necessary products from this feature categories."} />
       <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 xl:gap-10 mt-5'>
-        {isLoading && [0, 1, 2, 3, 4].map((_) => <Skeleton className='w-full' />)}
+        {isLoading && [...Array(8)].map((_) => <Skeleton key={_} className='w-full h-38' />)}
+        
         {
           categories?.data?.map((category: ICategories, i: number) => (
             <FeaturedCategoryCard key={i} category={category} />
