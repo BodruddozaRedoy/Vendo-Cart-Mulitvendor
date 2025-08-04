@@ -31,10 +31,10 @@ const [deleteProduct, result] = useDeleteProductMutation()
               Manage your product catalog and inventory
             </p>
           </div>
-          <Link to={'/product/add-product'}>
+          <Link to={'/manage-products/categories'}>
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
-              Add Category
+              Category
             </Button>
           </Link>
         </div>
