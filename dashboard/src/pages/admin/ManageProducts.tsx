@@ -5,13 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Filter, MoreHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { useDeleteProductMutation, useGetAllProductsByVendorQuery } from "@/redux/features/products/productApi";
+import { useDeleteProductMutation, useGetAllProductsByVendorQuery, useGetAllProductsQuery } from "@/redux/features/products/productApi";
 import { IProduct } from "@/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ManageProducts = () => {
-  const { data } = useGetAllProductsByVendorQuery(undefined, {
+  const { data, isLoading } = useGetAllProductsQuery(undefined, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true
@@ -33,7 +34,7 @@ const [deleteProduct, result] = useDeleteProductMutation()
           <Link to={'/product/add-product'}>
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
-              Add Product
+              Add Category
             </Button>
           </Link>
         </div>
@@ -59,7 +60,8 @@ const [deleteProduct, result] = useDeleteProductMutation()
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {!data && <div>No products added</div>}
+              {!data?.data?.length && !isLoading && <div>No products added</div>}
+              {isLoading && ([1,2,3]).map((_) => <Skeleton key={_} className="w-full h-[60px]"/>)}
               {data?.data?.map((product: IProduct) => (
                 <div key={product._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-4">

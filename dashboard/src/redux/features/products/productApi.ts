@@ -37,8 +37,12 @@ export const productApi = createApi({
             method: "DELETE",
         }),
         invalidatesTags: ['Product']
+    }),
+    getAllProducts: build.query({
+      query: () => '',
+      providesTags: ["Product"]
     })
   }),
 });
 
-export const { useAddProductMutation, useGetAllProductsByVendorQuery, useUpdateProductMutation, useGetAProductQuery, useDeleteProductMutation } = productApi;
+export const { useAddProductMutation, useGetAllProductsByVendorQuery, useUpdateProductMutation, useGetAProductQuery, useDeleteProductMutation, useGetAllProductsQuery } = productApi;

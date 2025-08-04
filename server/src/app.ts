@@ -3,16 +3,14 @@ import morgan from 'morgan';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db';
-// import connectDB from './config/db';
-// import errorMiddleware from './middleware/error.middleware';
 
 // Import routes
 import userRoutes from './modules/user/user.routes';
 import vendorRoutes from './modules/vendor/vendor.routes';
 import productRoutes from './modules/products/product.routes';
+import categoryRoutes from './modules/category/category.routes'
 import { errorMiddleware } from './middleware/error.middleware';
 import env from './config/env';
-// Import other routes...
 
 const app = express();
 
@@ -35,6 +33,7 @@ connectDB();
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/vendor', vendorRoutes);
 app.use('/api/v1/product', productRoutes);
+app.use('/api/v1/categories', categoryRoutes)
 
 // Error handling middleware
 app.use(errorMiddleware);
