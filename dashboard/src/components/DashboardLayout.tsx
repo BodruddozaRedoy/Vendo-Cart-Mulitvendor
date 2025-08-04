@@ -67,7 +67,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <Button variant="ghost" size="icon">
                 <Bell className="w-4 h-4" />
               </Button>
-              <Link to={"/login"}>
                 <Button variant="ghost" size="icon">
                   {
                     user ? <div>
@@ -75,18 +74,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         <DropdownMenuTrigger asChild>
                           <Avatar>
                             <AvatarImage src={user?.image || 'https://github.com/shadcn.png'} />
-                            <AvatarFallback>CN</AvatarFallback>
+                            {/* <AvatarFallback>CN</AvatarFallback> */}
                           </Avatar>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56" align="start">
                           <DropdownMenuLabel>{user?.fullName}</DropdownMenuLabel>
-                          {/* <DropdownMenuGroup>
-                            <a href={`${import.meta.env.FRONTEND_URL}/account/settings`}>
-                            <DropdownMenuItem>
-                              Profile
-                            </DropdownMenuItem>
-                            </a>
-                          </DropdownMenuGroup> */}
+                          
                           <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={handleLogout}>
                             Log out
@@ -96,7 +89,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     </div> : <User className="w-4 h-4" />
                   }
                 </Button>
-              </Link>
             </div>
           </header>
 

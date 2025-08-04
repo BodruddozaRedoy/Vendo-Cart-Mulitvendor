@@ -21,14 +21,24 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useGetProfile } from "@/hooks/useGetProfile";
+import Loading from "./Loading";
 
-const mainItems = [
+const vendorLinks = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Products", url: "/products", icon: Package },
   { title: "Orders", url: "/orders", icon: ShoppingCart },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Customers", url: "/customers", icon: Users },
 ];
+
+const adminLinks = [
+  {title: "Dashboard", url: "/", icon: LayoutDashboard},
+  {title: "Manage Products", url: "/manage-products", icon: Package},
+  { title: "Manage Orders", url: "/manage-orders", icon: ShoppingCart },
+  { title: "Analytics", url: "/admin-analytics", icon: BarChart3 },
+  { title: "Users", url: "/users", icon: Users },
+]
 
 const storeItems = [
   { title: "Store Settings", url: "/store", icon: Store },
@@ -37,6 +47,8 @@ const storeItems = [
 ];
 
 export function AppSidebar() {
+  const {fetchedUser, isLoading} = useGetProfile()
+  // console.log(fetchedUser)
   const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -52,6 +64,8 @@ export function AppSidebar() {
     return "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground";
   };
 
+  if(isLoading) return <div className="w-screen h-screen flex items-center justify-center"><Loading color={"text-primary"}/></div>
+
   return (
     <Sidebar className={`${isCollapsed ? "w-16" : "w-64 "}`} collapsible="icon">
       <div className="p-4 border-b bg-black text-white">
@@ -62,7 +76,7 @@ export function AppSidebar() {
           {!isCollapsed && (
             <div>
               <h2 className="font-semibold text-sm">VendoCart</h2>
-              <p className="text-xs text-muted">Vendor Dashboard</p>
+              <p className="text-xs text-muted">{fetchedUser.role === "vendor" ? "Vendor" : "Admin"} Dashboard</p>
             </div>
           )}
         </div>
@@ -73,7 +87,7 @@ export function AppSidebar() {
           <SidebarGroupLabel className="text-muted">Main</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainItems.map((item) => (
+              {(fetchedUser?.role === 'vendor' ? vendorLinks : adminLinks).map((item) => (
                 <SidebarMenuItem key={item.title} className={``}>
                   <SidebarMenuButton asChild className={`${currentPath === item.url ? 'text-black bg-white' : "text-white bg-black"}`}>
                     <NavLink to={item.url} end={item.url === "/"} >
@@ -94,7 +108,7 @@ export function AppSidebar() {
               {storeItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className={`${currentPath === item.url ? 'text-black bg-white' : "text-white bg-black"}`}>
-                    <NavLink to={item.url} className={getNavClassName}>
+                    <NavLink to={item.url} >
                       <item.icon className="w-4 h-4" />
                       {!isCollapsed && <span>{item.title}</span>}
                     </NavLink>

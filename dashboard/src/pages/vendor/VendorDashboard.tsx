@@ -3,7 +3,7 @@ import { DashboardStats } from "@/components/DashboardStats";
 import { RecentOrders } from "@/components/RecentOrders";
 import { SalesChart } from "@/components/SalesChart";
 
-const Index = () => {
+const VendorDashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -25,4 +25,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default VendorDashboard;

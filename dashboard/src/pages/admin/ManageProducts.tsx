@@ -10,7 +10,7 @@ import { IProduct } from "@/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
-const Products = () => {
+const ManageProducts = () => {
   const { data } = useGetAllProductsByVendorQuery(undefined, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
@@ -110,4 +110,4 @@ const [deleteProduct, result] = useDeleteProductMutation()
   );
 };
 
-export default Products;
+export default ManageProducts;
