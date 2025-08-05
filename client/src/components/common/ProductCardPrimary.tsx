@@ -1,7 +1,11 @@
+import { useAddToCartMutation } from '@/redux/features/cart/cartApi';
 import type { IProduct } from '@/types';
 import { FaStar } from "react-icons/fa";
 
 export default function ProductCardPrimary({ product }: { product: IProduct }) {
+  const [addToCart, result] = useAddToCartMutation()
+  console.log(result)
+
   return (
     <div className='bg-background shadow border flex flex-col items-center rounded-lg text-primary relative w-full max-w-xs sm:max-w-sm md:max-w-md'>
       <img
@@ -19,7 +23,7 @@ export default function ProductCardPrimary({ product }: { product: IProduct }) {
         <p className='font-light text-xs sm:text-sm line-clamp-2'>{product.description}</p>
       </div>
 
-      <button className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer'>
+      <button onClick={() => addToCart({productId: product._id})} className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer'>
         Add to cart
       </button>
 

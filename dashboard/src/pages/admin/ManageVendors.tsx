@@ -62,7 +62,7 @@ const [approveVendor] = useApproveVendorMutation()
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {!data?.data?.length && !isLoading && <div>No products added</div>}
+              {!data?.data?.length && !isLoading && <div>No vendors added</div>}
               {isLoading && ([1,2,3]).map((_) => <Skeleton key={_} className="w-full h-[60px]"/>)}
               {data?.data?.map((vendor: IVendor) => (
                 <div key={vendor._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">

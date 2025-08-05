@@ -9,6 +9,7 @@ import userRoutes from './modules/user/user.routes';
 import vendorRoutes from './modules/vendor/vendor.routes';
 import productRoutes from './modules/products/product.routes';
 import categoryRoutes from './modules/category/category.routes'
+import cartRoutes from './modules/cart/cart.routes'
 import { errorMiddleware } from './middleware/error.middleware';
 import env from './config/env';
 
@@ -34,6 +35,7 @@ app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/vendor', vendorRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/categories', categoryRoutes)
+app.use('/api/v1/cart', cartRoutes)
 
 // Error handling middleware
 app.use(errorMiddleware);

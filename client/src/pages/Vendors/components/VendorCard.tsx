@@ -6,7 +6,7 @@ import { IoMdMail } from "react-icons/io";
 
 export default function VendorCard({ vendor }: { vendor: IVendor }) {
     // Format the joined date to show only the year
-    const joinedYear = new Date(vendor.joinedAt).getFullYear();
+    const joinedYear = new Date(vendor.joinedAt!).getFullYear();
     
     return (
         <div className='relative text-primary bg-background shadow-md rounded-lg p-4 sm:p-5 transition-all hover:shadow-lg'>
@@ -20,7 +20,7 @@ export default function VendorCard({ vendor }: { vendor: IVendor }) {
                 {/* Left Section - Logo & Rating */}
                 <div className='flex items-center gap-3 sm:flex-col sm:items-center sm:gap-2 w-full sm:w-auto'>
                     <img 
-                        className='w-10 h-10 sm:w-12 sm:h-12' 
+                        className='w-10 h-10 lg:w-15 lg:h-15 object-cover rounded-full ' 
                         src={vendor.logo} 
                         alt={`${vendor.name} logo`} 
                     />
@@ -34,7 +34,7 @@ export default function VendorCard({ vendor }: { vendor: IVendor }) {
                 {/* Right Section - Products & Join Date */}
                 <div className='flex flex-col items-end gap-2 sm:gap-3 w-full sm:w-auto'>
                     <div className='py-1 px-2 bg-muted rounded text-xs sm:text-sm w-full sm:w-auto text-center'>
-                        {vendor.products.length} Products
+                        {vendor.products!.length} Products
                     </div>
                     <p className='text-xs text-muted-foreground'>
                         Member since {joinedYear}

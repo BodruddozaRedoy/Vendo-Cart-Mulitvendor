@@ -14,7 +14,7 @@ export interface IVendor {
   contactMail: string;
   phone: string;
   description:string;
-  joinedAt?: Date;
+  joinedAt?: string;
   products?: string[];
   owner: string; // User ID
   createdAt?: Date;

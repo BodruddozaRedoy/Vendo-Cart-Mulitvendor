@@ -70,7 +70,7 @@ const OpenAShop = () => {
 
     try {
       await addVendor(formData).unwrap();
-      navigate("/vendor")
+      navigate("/vendors")
       toast.success("Vendor Registered")
       console.log('Vendor registered:', formData);
       // Optionally: reset form or show success message
@@ -121,6 +121,7 @@ const OpenAShop = () => {
             <Input
               id="address"
               placeholder="Street, City, Country"
+              type='text'
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               required
@@ -135,7 +136,7 @@ const OpenAShop = () => {
             <Input
               id="phone"
               placeholder="+******"
-              value={formData.address}
+              value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               required
             />
@@ -160,7 +161,7 @@ const OpenAShop = () => {
             <Textarea
               id="description"
               placeholder="Type here..."
-              value={formData.address}
+              value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
             />

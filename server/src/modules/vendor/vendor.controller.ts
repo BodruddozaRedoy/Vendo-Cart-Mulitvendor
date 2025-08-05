@@ -9,7 +9,7 @@ import { User } from '../user/user.model';
 // Register a new vendor
 export const registerVendor = async (req: Request, res: Response) => {
   try {
-    const { name, logo, address, contactMail, owner } = req.body;
+    const { name, logo, address, contactMail, owner, description, phone } = req.body;
 
     if (!name || !logo || !address || !contactMail || !owner) {
       return res.status(400).json({ message: 'All required fields must be provided.' });
@@ -32,6 +32,8 @@ export const registerVendor = async (req: Request, res: Response) => {
       address,
       contactMail,
       owner,
+      description,
+      phone
     });
 
     return res.status(201).json({ message: 'Vendor registered successfully', data: newVendor });

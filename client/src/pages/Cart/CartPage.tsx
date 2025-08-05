@@ -3,31 +3,34 @@ import { FiPlus, FiMinus } from 'react-icons/fi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 
-const initialCart = [
-  {
-    id: 1,
-    name: 'Wireless Headphones',
-    price: 120,
-    quantity: 1,
-    image: 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=600&q=60'
-  },
-  {
-    id: 2,
-    name: 'Smartwatch',
-    price: 199,
-    quantity: 2,
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=60'
-  }
-];
+// const initialCart = [
+//   {
+//     id: 1,
+//     name: 'Wireless Headphones',
+//     price: 120,
+//     quantity: 1,
+//     image: 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=600&q=60'
+//   },
+//   {
+//     id: 2,
+//     name: 'Smartwatch',
+//     price: 199,
+//     quantity: 2,
+//     image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=60'
+//   }
+// ];
+
+// const initialCart = JSON.parse(localStorage.getItem("cart"))
 
 export default function CartPage() {
   const [cart, setCart] = useState(initialCart);
   const [coupon, setCoupon] = useState('');
   const [discount, setDiscount] = useState(0);
+  // const cart = localStorage.getItem("cart")
 
   const updateQuantity = (id:any, delta:any) => {
     setCart(prev =>
-      prev.map(item =>
+      prev?.map(item =>
         item.id === id
           ? { ...item, quantity: Math.max(1, item.quantity + delta) }
           : item
@@ -36,7 +39,7 @@ export default function CartPage() {
   };
 
   const removeItem = (id:any) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+    setCart(prev => prev?.filter(item => item.id !== id));
   };
 
   const applyCoupon = () => {
@@ -48,7 +51,7 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cart?.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountAmount = (subtotal * discount) / 100;
   const total = subtotal - discountAmount;
 
@@ -58,7 +61,7 @@ export default function CartPage() {
       <div>
         <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
 
-        {cart.length === 0 ? (
+        {cart?.length === 0 ? (
           <p className="text-primary/50 text-lg">Your cart is empty.</p>
         ) : (
           <div className="grid grid-cols-6 bg-primary/5 rounded-lg overflow-hidden text-sm font-semibold text-primary">
@@ -69,7 +72,7 @@ export default function CartPage() {
               <div className="p-4 text-center">Total</div>
 
             {/* Items */}
-            {cart.map(item => (
+            {cart?.map(item => (
               <React.Fragment key={item.id}>
                 <div className="col-span-3 p-4 flex items-center gap-4 border-t">
                   <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />

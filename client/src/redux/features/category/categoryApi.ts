@@ -30,6 +30,7 @@ export const categoryApi = createApi({
         method: "PUT",
         body: payload,
       }),
+      invalidatesTags: ["Category"]
     }),
     deleteACategory: build.mutation({
       query: (id) => ({
