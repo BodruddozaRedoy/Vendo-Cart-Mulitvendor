@@ -7,9 +7,10 @@ import { useGetProfile } from '@/hooks/useGetProfile';
 import { useAddVendorMutation } from '@/redux/features/vendor/vendorApi';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
 
 const OpenAShop = () => {
-  const { data:user } = useGetProfile();
+  const { data: user } = useGetProfile();
   const [addVendor] = useAddVendorMutation();
   const navigate = useNavigate()
   // console.log(user.data)
@@ -19,6 +20,8 @@ const OpenAShop = () => {
     logo: '',
     address: '',
     contactMail: '',
+    phone: "",
+    description: "",
     owner: user.data._id
   });
   console.log(formData)
@@ -29,8 +32,8 @@ const OpenAShop = () => {
   });
 
   useEffect(() => {
-    setFormData({...formData, owner:user.data._id})
-  },[user])
+    setFormData({ ...formData, owner: user.data._id })
+  }, [user])
 
   const isValidURL = (url: string) => {
     try {
@@ -58,7 +61,7 @@ const OpenAShop = () => {
 
     if (newErrors.logo || newErrors.contactMail) return;
 
-    
+
 
     // const vendorPayload = {
     //   ...formData,
@@ -124,6 +127,20 @@ const OpenAShop = () => {
             />
           </div>
 
+
+
+          {/* Phone */}
+          <div className="space-y-2">
+            <Label htmlFor="address">Phone Number</Label>
+            <Input
+              id="phone"
+              placeholder="+******"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              required
+            />
+          </div>
+
           {/* Contact Email */}
           <div className="space-y-2">
             <Label htmlFor="contactMail">Contact Email</Label>
@@ -136,6 +153,17 @@ const OpenAShop = () => {
               required
             />
             {errors.contactMail && <p className="text-red-500 text-sm">{errors.contactMail}</p>}
+          </div>
+          {/* Description */}
+          <div className="space-y-2">
+            <Label htmlFor="address">Description</Label>
+            <Textarea
+              id="description"
+              placeholder="Type here..."
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
+            />
           </div>
 
           {/* Submit */}

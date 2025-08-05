@@ -139,7 +139,7 @@ const MainNavbar = () => {
   // const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
 
   const dispatch = useDispatch()
-  const { user } = useGetProfile()
+  const { data:user } = useGetProfile()
 
   const handleLogout = async () => {
     await logout(null).unwrap()
