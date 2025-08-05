@@ -20,6 +20,7 @@ import ManageOrders from "@/pages/admin/ManageOrders"
 import AdminAnalytics from "@/pages/admin/AdminAnalytics"
 import Users from "@/pages/admin/Users"
 import Category from "@/pages/admin/Category"
+import ManageVendors from "@/pages/admin/ManageVendors"
 
 export default function RouterProvider() {
   const location = useLocation()
@@ -62,6 +63,7 @@ export default function RouterProvider() {
         <Route path="/manage-orders" element={<ManageOrders/>}/>
         <Route path="/admin-analytics" element={<AdminAnalytics/>}/>
         <Route path="/users" element={<Users/>}/>
+        <Route path="/manage-vendors" element={<ManageVendors/>}/>
       </Route>
 
       <Route path="*" element={<NotFound />} />

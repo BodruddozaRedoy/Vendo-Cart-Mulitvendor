@@ -38,6 +38,7 @@ const adminLinks = [
   { title: "Manage Orders", url: "/manage-orders", icon: ShoppingCart },
   { title: "Analytics", url: "/admin-analytics", icon: BarChart3 },
   { title: "Users", url: "/users", icon: Users },
+  { title: "Vendors", url: "/manage-vendors", icon: Users },
 ]
 
 const storeItems = [

@@ -9,6 +9,15 @@ import { useGetProfile } from "@/hooks/useGetProfile"
 import { useAddProductMutation } from "@/redux/features/products/productApi"
 import { useNavigate } from "react-router-dom"
 import Loading from "@/components/Loading"
+import { useGetAllCategoryQuery } from "@/redux/features/category/categoryApi"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { ICategories } from "@/types"
 
 interface ProductFormData {
   name: string
@@ -32,8 +41,15 @@ interface ProductFormData {
 const AddProduct: React.FC = () => {
   const { fetchedUser: user } = useGetProfile()
   const [addProduct, result] = useAddProductMutation()
+  const { data: categories } = useGetAllCategoryQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true
+  })
   const navigate = useNavigate()
   const { toast } = useToast()
+  const [subcategories, setSubcategories] = useState([])
+  console.log(subcategories)
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
@@ -109,13 +125,51 @@ const AddProduct: React.FC = () => {
             </div>
 
             <div className="grid gap-1">
-              <Label htmlFor="category">Category</Label>
-              <Input id="category" name="category" value={formData.category} onChange={handleChange} required />
+              <Label htmlFor="image">Category</Label>
+              <Select
+                value={formData.category}
+                required
+                onValueChange={(value) => {
+                  setFormData((prev) => ({ ...prev, category: value }))
+                  const selectedCategory = categories?.data.find((cat: ICategories) => cat.name === value)
+                  setSubcategories(selectedCategory?.subcategories || [])
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories?.data?.map((category: ICategories) => (
+                    <SelectItem key={category.name} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
             </div>
 
             <div className="grid gap-1">
               <Label htmlFor="subcategory">Subcategory</Label>
-              <Input id="subcategory" name="subcategory" value={formData.subcategory} onChange={handleChange} />
+              <Select
+                value={formData.subcategory}
+                required
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, subcategory: value }))
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Subcategory" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subcategories?.map((subcat: string) => (
+                    <SelectItem key={subcat} value={subcat}>
+                      {subcat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
             </div>
 
             <div className="grid gap-1">

@@ -6,15 +6,14 @@ import { Plus, Search, Filter, MoreHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { useDeleteProductMutation, useGetAllProductsByVendorQuery, useGetAllProductsQuery } from "@/redux/features/products/productApi";
-import { IProduct, IUser, IVendor } from "@/types";
+import { IProduct, IVendor } from "@/types";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApproveVendorMutation, useDeleteVendorMutation, useGetAllVendorQuery } from "@/redux/features/vendor/vendorApi";
-import { useGetAllUsersQuery } from "@/redux/features/auth/authApi";
 
-const Users = () => {
-  const { data, isLoading } = useGetAllUsersQuery(undefined, {
+const ManageVendors = () => {
+  const { data, isLoading } = useGetAllVendorQuery(undefined, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true
@@ -29,15 +28,15 @@ const [approveVendor] = useApproveVendorMutation()
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Users</h1>
+            <h1 className="text-3xl font-bold">Vendors</h1>
             <p className="text-muted-foreground">
-              Manage your users
+              Manage your vendors
             </p>
           </div>
           <Link to={'/'}>
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
-              Add User
+              Add Vendor
             </Button>
           </Link>
         </div>
@@ -46,8 +45,8 @@ const [approveVendor] = useApproveVendorMutation()
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle>All Users</CardTitle>
-                <CardDescription>A list of all your users</CardDescription>
+                <CardTitle>All Vendors</CardTitle>
+                <CardDescription>A list of all your vendors</CardDescription>
               </div>
               <div className="flex gap-2">
                 <div className="relative">
@@ -65,31 +64,28 @@ const [approveVendor] = useApproveVendorMutation()
             <div className="space-y-4">
               {!data?.data?.length && !isLoading && <div>No products added</div>}
               {isLoading && ([1,2,3]).map((_) => <Skeleton key={_} className="w-full h-[60px]"/>)}
-              {data?.data?.map((user: IUser) => (
-                <div key={user._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+              {data?.data?.map((vendor: IVendor) => (
+                <div key={vendor._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center text-2xl">
-                      <img src={user.picture} alt="" />
+                      <img src={vendor.logo} alt="" />
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <span className="font-medium">{user.fullName}</span>
-                        <Badge className={user.isVerified ? 'bg-success': "bg-warning"}>
-                          {user.isVerified ? 'Verified' : "Not Verified"}
-                        </Badge>
-                        <Badge className={user.isActive ? 'bg-success': "bg-warning"}>
-                          {user.isActive ? 'Active' : "Inactive"}
+                        <span className="font-medium">{vendor.name}</span>
+                        <Badge className={vendor.isVerified ? 'bg-success': "bg-warning"}>
+                          {vendor.isVerified ? 'Verified' : "Not Verified"}
                         </Badge>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {user._id} • {user.createdAt} • {user.email} • {user.phone ? user.phone : "No phone number added"}
+                        {vendor._id} • {vendor.joinedAt}
                       </div>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-6">
                     <div className="text-right">
-                      <div className="font-semibold">{(user.role).toUpperCase()} </div>
+                      <div className="font-semibold">{vendor.products?.length} Products</div>
                       {/* <div className="text-sm text-muted-foreground">
                         {vendor.quantity} in stock
                       </div> */}
@@ -103,8 +99,9 @@ const [approveVendor] = useApproveVendorMutation()
                       <DropdownMenuContent>
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => {deleteVendor(user._id);toast.success("Deleted")}}>Delete</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {approveVendor(user._id);toast.success("Approved")}}>Approve</DropdownMenuItem>
+                        <Link to={`/product/update-product/${vendor._id}`}><DropdownMenuItem>Products</DropdownMenuItem></Link>
+                        <DropdownMenuItem onClick={() => {deleteVendor(vendor._id);toast.success("Deleted")}}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {approveVendor(vendor._id);toast.success("Approved")}}>Approve</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -118,4 +115,4 @@ const [approveVendor] = useApproveVendorMutation()
   );
 };
 
-export default Users;
+export default ManageVendors;

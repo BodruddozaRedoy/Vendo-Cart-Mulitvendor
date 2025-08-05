@@ -31,8 +31,12 @@ export const authApi = createApi({
         url: "/user/logout",
         method: "POST"
       }),
+    }),
+    getAllUsers: build.query({
+      query: () => '/user',
+      providesTags:["User"]
     })
   }),
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation, useGetUserQuery, useLogoutMutation } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useGetUserQuery, useLogoutMutation, useGetAllUsersQuery } = authApi;
