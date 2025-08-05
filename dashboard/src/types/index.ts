@@ -5,16 +5,20 @@ export interface ICategories {
 }
 
 export interface IVendor {
-    _id: string,
-    name: string,
-    logo: string,
-    rating: number,
-    reviewsCount: number,
-    isVerified: boolean,
-    address: string,
-    contactMail: string,
-    joinedAt: string,
-    products:IProduct[]
+  name: string;
+  logo: string;
+  rating?: number;
+  reviewsCount?: number;
+  isVerified?: boolean;
+  address: string;
+  contactMail: string;
+  phone: string;
+  description:string;
+  joinedAt?: Date;
+  products?: string[];
+  owner: string; // User ID
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IProduct {

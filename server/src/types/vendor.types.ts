@@ -9,6 +9,8 @@ export interface IVendor {
   isVerified?: boolean;
   address: string;
   contactMail: string;
+  phone: string;
+  description:string;
   joinedAt?: Date;
   products?: Types.ObjectId[];
   owner: Types.ObjectId; // User ID

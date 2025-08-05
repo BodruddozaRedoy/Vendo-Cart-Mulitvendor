@@ -11,6 +11,8 @@ const vendorSchema = new Schema<IVendorModel>({
   isVerified: { type: Boolean, default: false },
   address: { type: String, required: true },
   contactMail: { type: String, required: true },
+  phone: {type: String, required: true},
+  description: {type: String, required: true},
   joinedAt: { type: Date, default: Date.now },
   owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 }, {
