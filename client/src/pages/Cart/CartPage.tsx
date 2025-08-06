@@ -1,45 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
+import useGetCart from '@/hooks/useGetCart';
+import { type IProduct, type ICart, type ICartProduct } from '@/types';
+import { useClearCartMutation, useDeleteCartMutation, useUpdateCartMutation } from '@/redux/features/cart/cartApi';
+import Loading from '@/components/common/Loading';
 
-// const initialCart = [
-//   {
-//     id: 1,
-//     name: 'Wireless Headphones',
-//     price: 120,
-//     quantity: 1,
-//     image: 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=600&q=60'
-//   },
-//   {
-//     id: 2,
-//     name: 'Smartwatch',
-//     price: 199,
-//     quantity: 2,
-//     image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=60'
-//   }
-// ];
-
-// const initialCart = JSON.parse(localStorage.getItem("cart"))
 
 export default function CartPage() {
-  const [cart, setCart] = useState(initialCart);
+  const [cart, setCart] = useState<ICartProduct[]>([]);
   const [coupon, setCoupon] = useState('');
   const [discount, setDiscount] = useState(0);
-  // const cart = localStorage.getItem("cart")
+  const { cart: initialCart, isLoading:cartLoading } = useGetCart()
 
-  const updateQuantity = (id:any, delta:any) => {
-    setCart(prev =>
-      prev?.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
+  const [updateCart, updateResult] = useUpdateCartMutation()
+  const [deleteCartItem, deleteResult] = useDeleteCartMutation()
+  const [clearCart, clearCartResult] = useClearCartMutation()
+
+
+
+  useEffect(() => {
+    setCart(initialCart)
+  }, [initialCart, cart, coupon, discount])
+
+
+
+  const updateQuantity = async (id: any, delta: any) => {
+    console.log(id)
+    await updateCart({ productId: id, quantity: delta })
+    // setCart(prev =>
+    //   prev?.map(item =>
+    //     item._id === id
+    //       ? { ...item, quantity: Math.max(1, item.quantity + delta) }
+    //       : item
+    //   )
+    // );
   };
 
-  const removeItem = (id:any) => {
-    setCart(prev => prev?.filter(item => item.id !== id));
+  const removeItem = async (id: any) => {
+    // console.log(id)
+    await deleteCartItem(id)
+    // setCart(prev => prev?.filter(item => item._id !== id));
   };
 
   const applyCoupon = () => {
@@ -55,62 +57,75 @@ export default function CartPage() {
   const discountAmount = (subtotal * discount) / 100;
   const total = subtotal - discountAmount;
 
+  // if(!initialCart) return <LoadingScreen/>
+  // if(result.isLoading){
+  //    <div className='w-screen h-screen absolute top-0 z-[9999] left-0 flex items-center justify-center'><Loading/></div>
+  // }
+  console.log(deleteResult)
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-primary grid lg:grid-cols-[2fr_1fr] gap-10">
       {/* Cart Table */}
       <div>
-        <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+        <div className='flex items-center justify-between'>
+          <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+          <Button onClick={() => clearCart(0)} disabled={cart?.length === 0}>{clearCartResult.isLoading ? "Clearing..." : "Clear Cart"}</Button>
+        </div>
 
         {cart?.length === 0 ? (
           <p className="text-primary/50 text-lg">Your cart is empty.</p>
-        ) : (
-          <div className="grid grid-cols-6 bg-primary/5 rounded-lg overflow-hidden text-sm font-semibold text-primary">
-            {/* Header */}
-              <div className="col-span-3 p-4">Product</div>
-              <div className="p-4 text-center">Price</div>
-              <div className="p-4 text-center">Quantity</div>
-              <div className="p-4 text-center">Total</div>
+        ) : (<>
+          {deleteResult.isLoading || updateResult.isLoading || cartLoading ? <div className='h-auto w-full flex items-center justify-center mt-5'><Loading /></div> : (
+            <>
+              <div className="grid grid-cols-6 bg-primary/5 rounded-lg overflow-hidden text-sm font-semibold text-primary">
+                {/* Header */}
+                <div className="col-span-3 p-4">Product</div>
+                <div className="p-4 text-center">Price</div>
+                <div className="p-4 text-center">Quantity</div>
+                <div className="p-4 text-center">Total</div>
 
-            {/* Items */}
-            {cart?.map(item => (
-              <React.Fragment key={item.id}>
-                <div className="col-span-3 p-4 flex items-center gap-4 border-t">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
-                  <div>
-                    <h2 className="font-semibold text-base">{item.name}</h2>
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="text-red-500 text-xs flex items-center gap-1 mt-1 hover:underline"
-                    >
-                      <MdDeleteOutline /> Remove
-                    </button>
-                  </div>
-                </div>
-                <div className="p-4 text-center border-t">${item.price.toFixed(2)}</div>
-                <div className="p-4 flex items-center justify-center gap-2 border-t">
-                  <button
-                    onClick={() => updateQuantity(item.id, -1)}
-                    className="p-1 border rounded-md disabled:opacity-50"
-                    disabled={item.quantity <= 1}
-                  >
-                    <FiMinus />
-                  </button>
-                  <span>{item.quantity}</span>
-                  <button
-                    onClick={() => updateQuantity(item.id, 1)}
-                    className="p-1 border rounded-md"
-                  >
-                    <FiPlus />
-                  </button>
-                </div>
-                <div className="p-4 text-center border-t font-medium">
-                  ${(item.price * item.quantity).toFixed(2)}
-                </div>
-                
-              </React.Fragment>
-            ))}
-          </div>
-        )}
+                {/* Items */}
+                {cart?.map(item => (
+                  <React.Fragment key={item._id} >
+                    <div className="col-span-3 p-4 flex items-center gap-4 border-t">
+                      <img src={item.productId.image} alt={item.productId.name} className="w-16 h-16 object-cover rounded-md" />
+                      <div>
+                        <h2 className="font-semibold text-base">{item.productId.name}</h2>
+                        <button
+                          onClick={() => removeItem(item.productId._id)}
+                          className="text-red-500 text-xs flex items-center gap-1 mt-1 hover:underline"
+                        >
+                          <MdDeleteOutline /> {'Remove'}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-4 text-center border-t">${item.price?.toFixed(2)}</div>
+                    <div className="p-4 flex items-start justify-center gap-2 border-t">
+                      <button
+                        onClick={() => updateQuantity(item.productId._id, item.quantity - 1)}
+                        className="p-1 border rounded-md disabled:opacity-50 cursor-pointer"
+                        disabled={item.quantity <= 1 && updateResult.isLoading}
+                      >
+                        <FiMinus />
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        onClick={() => updateQuantity(item.productId._id, item.quantity + 1)}
+                        className="p-1 border rounded-md disabled:opacity-50 cursor-pointer"
+                        disabled={updateResult.isLoading}
+                      >
+                        <FiPlus />
+                      </button>
+                    </div>
+                    <div className="p-4 text-center border-t font-medium">
+                      ${(item.price * item.quantity)?.toFixed(2)}
+                    </div>
+
+                  </React.Fragment>
+                ))}
+              </div>
+            </>
+          )}
+        </>)}
       </div>
 
       {/* Cart Summary */}
@@ -120,17 +135,17 @@ export default function CartPage() {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>${subtotal?.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Discount</span>
             <span className={discount > 0 ? 'text-green-600' : ''}>
-              {discount > 0 ? `- $${discountAmount.toFixed(2)}` : '$0.00'}
+              {discount > 0 ? `- $${discountAmount?.toFixed(2)}` : '$0.00'}
             </span>
           </div>
           <div className="flex justify-between font-bold text-lg border-t pt-3">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>${total?.toFixed(2)}</span>
           </div>
         </div>
 

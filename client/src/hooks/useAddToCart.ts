@@ -1,11 +1,15 @@
-import type { IProduct } from "@/types";
-import React, { useState } from "react";
+import { useAddToCartMutation } from "@/redux/features/cart/cartApi";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function useAddToCart() {
-  const [cart, setCart] = useState<IProduct[]>([]);
-  const addToCart = (product: IProduct) => {
-      setCart([...cart, product]);
-      localStorage.setItem("cart", JSON.stringify(cart));
-  };
-  return { addToCart };
+  const [addToCart, result] = useAddToCartMutation();
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      toast.success("Product added to cart");
+    }
+  }, [result.isSuccess]);
+
+  return { addToCart, result };
 }

@@ -1,10 +1,11 @@
+import useAddToCart from '@/hooks/useAddToCart';
 import { useAddToCartMutation } from '@/redux/features/cart/cartApi';
 import type { IProduct } from '@/types';
 import { FaStar } from "react-icons/fa";
 
 export default function ProductCardPrimary({ product }: { product: IProduct }) {
-  const [addToCart, result] = useAddToCartMutation()
-  console.log(result)
+  const {addToCart} = useAddToCart()
+  // console.log(result)
 
   return (
     <div className='bg-background shadow border flex flex-col items-center rounded-lg text-primary relative w-full max-w-xs sm:max-w-sm md:max-w-md'>

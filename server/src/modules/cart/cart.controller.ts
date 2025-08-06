@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Cart from "./cart.model";
 import { Product } from "../products/product.model";
 
@@ -83,10 +83,11 @@ export const updateCartItem = async (req: Request, res: Response) => {
 
     const cart = await Cart.findOne({ userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
-
+console.log(cart.products[0].productId.toString())
     const item = cart.products.find(
       (p) => p.productId.toString() === productId
     );
+    console.log(item)
     if (!item)
       return res.status(404).json({ message: "Product not found in cart" });
 
@@ -110,23 +111,32 @@ export const deleteCartItem = async (req: Request, res: Response) => {
     const userId = req.user.id;
     const { productId } = req.params;
 
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOneAndUpdate(
+      { userId },
+      {
+        $pull: {
+          products: { productId: new mongoose.Types.ObjectId(productId) },
+        },
+      },
+      { new: true }
+    );
+
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    cart.products = cart.products.filter(
-      (p) => p.productId.toString() !== productId
-    );
-    cart.total = cart.products.reduce(
+    // Recalculate total after item removal
+    const updatedTotal = cart.products.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
+    cart.total = updatedTotal;
     await cart.save();
 
-    res.status(200).json({ message: "Item deleted" });
+    res.status(200).json({ message: "Item deleted", cart });
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to remove item from cart", details: err });
+    res.status(500).json({
+      error: "Failed to remove item from cart",
+      details: err instanceof Error ? err.message : err,
+    });
   }
 };
 
