@@ -1,60 +1,24 @@
-import { useState } from "react";
+import LoadingScreen from "@/components/common/LoadingScreen";
+import useAddToCart from "@/hooks/useAddToCart";
+import { useGetAProductQuery } from "@/redux/features/products/productApi";
+import { useEffect, useState } from "react";
 import { FaHeart, FaTrash } from "react-icons/fa";
+import { useParams } from "react-router";
 
-interface IProduct {
-  _id: string;
-  name: string;
-  image: string;
-  images: string[];
-  category: string;
-  description: string;
-  brand: string;
-  price: number;
-  discount: number;
-  rating: number;
-  reviewsCount: number;
-  features: string[];
-  warranty: string;
-  shipping: string;
-  tags: string[];
-}
-
-const sampleProduct: IProduct = {
-  _id: "1",
-  name:
-    "Samsung Galaxy S22 Ultra, 8K Camera & Video, Brightest Display Screen, S Pen Pro",
-  image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9",
-  images: [
-    "https://images.unsplash.com/photo-1611515085573-324d2521c5d4",
-    "https://images.unsplash.com/photo-1580910051073-3af8fa1b4d2e",
-    "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
-    "https://images.unsplash.com/photo-1512499617640-c2f9990589a0",
-    "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
-  ],
-  category: "Smartphones",
-  description: "8k super steady video, night photography, adaptive contrast, etc.",
-  brand: "Samsung",
-  price: 2856.3,
-  discount: 17,
-  rating: 4.8,
-  reviewsCount: 65,
-  features: [
-    "8k super steady video",
-    "Nightography plus portrait mode",
-    "50mp photo resolution plus bright display",
-    "Adaptive color contrast",
-    "Premium design & craftsmanship",
-    "Long lasting battery plus fast charging",
-  ],
-  warranty: "1 Year Brand Warranty",
-  shipping: "Free Delivery",
-  tags: ["Smartphone", "Blue", "Android", "5G"],
-};
 
 export default function ProductDetails() {
-  const [mainImage, setMainImage] = useState(sampleProduct.image);
+  const { addToCart, result } = useAddToCart()
+  const { id } = useParams()
+  const { data } = useGetAProductQuery(id)
+  const product = data?.data
+  const [mainImage, setMainImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
-
+  useEffect(() => {
+    setMainImage(product?.image)
+  }, [])
+  console.log(product?.data)
+  console.log(id)
+  if(!product) return <LoadingScreen/>
   return (
     <div className="container mx-auto p-6 text-primary">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -66,15 +30,14 @@ export default function ProductDetails() {
               scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
             style={{ scrollSnapType: "x mandatory" }}
           >
-            {sampleProduct.images.map((img, i) => (
+            {product?.images.map((img:any, i:number) => (
               <img
                 key={i}
                 src={img}
                 alt={`Thumbnail ${i + 1}`}
                 onClick={() => setMainImage(img)}
-                className={`w-16 h-16 rounded-lg object-cover cursor-pointer hover:border-primary border-2 ${
-                  mainImage === img ? "border-primary" : "border-transparent"
-                }`}
+                className={`w-16 h-16 rounded-lg object-cover cursor-pointer hover:border-primary border-2 ${mainImage === img ? "border-primary" : "border-transparent"
+                  }`}
                 style={{ scrollSnapAlign: "start" }}
               />
             ))}
@@ -83,7 +46,7 @@ export default function ProductDetails() {
           {/* Main Image */}
           <div className="flex-1">
             <img
-              src={mainImage}
+              src={mainImage || product.image}
               alt="Main product"
               className="w-full h-[300px] sm:h-[400px] md:h-[500px] object-contain rounded-xl"
             />
@@ -92,30 +55,30 @@ export default function ProductDetails() {
 
         {/* Product Info */}
         <div className="space-y-4">
-          <h1 className="text-xl sm:text-2xl font-bold">{sampleProduct.name}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">{product.name}</h1>
           <p className="text-yellow-500 font-medium text-sm sm:text-base">
-            ★ {sampleProduct.rating} ({sampleProduct.reviewsCount} reviews)
+            ★ {product.rating} ({product.reviewsCount} reviews)
           </p>
 
           <div className="text-xl sm:text-2xl font-semibold text-primary">
-            ${sampleProduct.price.toFixed(2)}
+            ${product.price.toFixed(2)}
             <span className="text-gray-400 line-through ml-3 text-sm sm:text-base">
-              ${(sampleProduct.price / (1 - sampleProduct.discount / 100)).toFixed(2)}
+              ${(product.price / (1 - product.discount / 100)).toFixed(2)}
             </span>
             <span className="ml-2 text-xs sm:text-sm text-red-500">
-              -{sampleProduct.discount}%
+              -{product.discount}%
             </span>
           </div>
 
           <ul className="grid grid-cols-1 md:grid-cols-2 list-disc pl-5 gap-1 text-sm sm:text-base">
-            {sampleProduct.features.map((feature, i) => (
+            {product.features.map((feature:any, i:number) => (
               <li key={i}>{feature}</li>
             ))}
           </ul>
 
           {/* Quantity and Buttons */}
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="px-3 py-1 bg-gray-200 rounded"
@@ -129,15 +92,15 @@ export default function ProductDetails() {
               >
                 +
               </button>
-            </div>
+            </div> */}
 
             <div className="flex gap-3 flex-wrap">
-              <button className="bg-primary text-white px-4 py-2 rounded whitespace-nowrap">
+              <button onClick={() => addToCart({productId: product._id})} className="bg-primary text-white px-4 py-2 rounded whitespace-nowrap">
                 Add to Cart
               </button>
-              <button className="bg-secondary text-white px-4 py-2 rounded whitespace-nowrap">
+              {/* <button className="bg-secondary text-white px-4 py-2 rounded whitespace-nowrap">
                 Buy Now
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -152,13 +115,13 @@ export default function ProductDetails() {
 
           <div className="mt-4 text-sm space-y-1">
             <p>
-              <strong>Category:</strong> {sampleProduct.category}
+              <strong>Category:</strong> {product.category}
             </p>
             <p>
-              <strong>Tags:</strong> {sampleProduct.tags.join(", ")}
+              <strong>Tags:</strong> {product.tags.join(", ")}
             </p>
             <p>
-              <strong>Shipping:</strong> {sampleProduct.shipping}
+              <strong>Shipping:</strong> {product.shipping}
             </p>
           </div>
         </div>
@@ -166,14 +129,14 @@ export default function ProductDetails() {
         {/* Separator */}
         <div className="col-span-1 lg:col-span-2 border-t pt-8 mt-10 space-y-4">
           <h2 className="text-lg sm:text-xl font-semibold">Product Description</h2>
-          <p>{sampleProduct.description}</p>
+          <p>{product.description}</p>
 
           <h2 className="text-lg sm:text-xl font-semibold">Warranty</h2>
-          <p>{sampleProduct.warranty}</p>
+          <p>{product.warranty}</p>
 
           <h2 className="text-lg sm:text-xl font-semibold">Vendor Info</h2>
           <p>
-            <strong>Brand:</strong> {sampleProduct.brand}
+            <strong>Brand:</strong> {product.brand}
           </p>
         </div>
       </div>

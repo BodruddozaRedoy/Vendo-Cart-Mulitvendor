@@ -78,6 +78,10 @@ export const routes = createBrowserRouter([
             {
                 path: "/open-a-shop",
                 Component: OpenAShop
+            },
+            {
+                path: "/product/:id",
+                Component: ProductDetailsPage
             }
         ]
 

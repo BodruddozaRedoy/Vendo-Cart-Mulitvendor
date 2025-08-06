@@ -2,6 +2,7 @@ import useAddToCart from '@/hooks/useAddToCart';
 import type { IProduct } from '@/types';
 import { FaStar } from "react-icons/fa";
 import Loading from './Loading';
+import { Link } from 'react-router';
 
 export default function ProductCardPrimary({ product }: { product: IProduct }) {
   const {addToCart, result} = useAddToCart()
@@ -16,7 +17,7 @@ export default function ProductCardPrimary({ product }: { product: IProduct }) {
       />
       <div className='p-4 sm:p-5 flex-1 space-y-2 w-full'>
         <p className='text-xs sm:text-sm font-semibold'>{product.brand}</p>
-        <h1 className='font-semibold text-sm sm:text-base truncate'>{product.name}</h1>
+        <Link to={`/product/${product._id}`}><h1 className='font-semibold text-sm sm:text-base truncate'>{product.name}</h1></Link>
         <p className='flex gap-1 items-center text-sm font-light'>
           <FaStar className='text-yellow-500' /> ({product.rating})
         </p>

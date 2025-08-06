@@ -6,7 +6,6 @@ export default function useGetCart() {
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true
   })
-  const cart = data?.products
-  console.log(cart)
-  return {cart, isLoading}
+  // console.log(cart)
+  return {cart:data?.products, isLoading}
 }

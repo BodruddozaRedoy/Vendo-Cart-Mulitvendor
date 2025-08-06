@@ -5,6 +5,7 @@ import { productApi } from './features/products/productApi'
 import { categoryApi } from './features/category/categoryApi'
 import { vendorApi } from './features/vendor/vendorApi'
 import { cartApi } from './features/cart/cartApi'
+import { wishlistApi } from './features/wishlist/wishlistApi'
 
 export const store = configureStore({
   reducer: {
@@ -13,10 +14,11 @@ export const store = configureStore({
     [categoryApi.reducerPath]:categoryApi.reducer,
     [vendorApi.reducerPath]:vendorApi.reducer,
     [cartApi.reducerPath]:cartApi.reducer,
+    [wishlistApi.reducerPath]:wishlistApi.reducer,
     auth: authReducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware).concat(productApi.middleware).concat(categoryApi.middleware).concat(vendorApi.middleware).concat(cartApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware).concat(productApi.middleware).concat(categoryApi.middleware).concat(vendorApi.middleware).concat(cartApi.middleware).concat(wishlistApi.middleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
