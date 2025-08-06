@@ -160,14 +160,14 @@ export default function CartPage() {
               placeholder="Enter coupon code"
               className="flex-1 border px-4 py-2 rounded-md shadow-sm"
             />
-            <Button onClick={applyCoupon}>Apply</Button>
+            <Button disabled={!cart?.length} onClick={applyCoupon}>Apply</Button>
           </div>
           {discount > 0 && (
             <p className="text-green-600 text-sm mt-2">Coupon applied: {discount}% off</p>
           )}
         </div>
 
-        <Button className="w-full mt-6 py-3 text-lg">Checkout</Button>
+        <Button disabled={!cart?.length} className="w-full mt-6 py-3 text-lg">Checkout</Button>
       </div>
     </div>
   );
