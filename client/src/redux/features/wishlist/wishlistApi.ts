@@ -38,4 +38,4 @@ export const wishlistApi = createApi({
   }),
 });
 
-export const {} = wishlistApi;
+export const {useAddToWishlistMutation, useDeleteWishlistMutation, useGetWishlistQuery, useUpdateWishlistMutation} = wishlistApi;

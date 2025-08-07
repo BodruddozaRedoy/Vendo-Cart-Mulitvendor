@@ -6,6 +6,7 @@ import useGetCart from '@/hooks/useGetCart';
 import { type IProduct, type ICart, type ICartProduct } from '@/types';
 import { useClearCartMutation, useDeleteCartMutation, useUpdateCartMutation } from '@/redux/features/cart/cartApi';
 import Loading from '@/components/common/Loading';
+import { Link } from 'react-router';
 
 
 export default function CartPage() {
@@ -167,7 +168,7 @@ export default function CartPage() {
           )}
         </div>
 
-        <Button disabled={!cart?.length} className="w-full mt-6 py-3 text-lg">Checkout</Button>
+        <Link to={"/checkout"}><Button disabled={!cart?.length} className="w-full mt-6 py-3 text-lg">Checkout</Button></Link>
       </div>
     </div>
   );

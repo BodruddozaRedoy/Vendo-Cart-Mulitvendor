@@ -1,5 +1,6 @@
 import LoadingScreen from "@/components/common/LoadingScreen";
 import useAddToCart from "@/hooks/useAddToCart";
+import useAddToWishlist from "@/hooks/useAddToWishlist";
 import { useGetAProductQuery } from "@/redux/features/products/productApi";
 import { useEffect, useState } from "react";
 import { FaHeart, FaTrash } from "react-icons/fa";
@@ -8,6 +9,7 @@ import { useParams } from "react-router";
 
 export default function ProductDetails() {
   const { addToCart, result } = useAddToCart()
+  const {addToWishlist} = useAddToWishlist()
   const { id } = useParams()
   const { data } = useGetAProductQuery(id)
   const product = data?.data
@@ -105,7 +107,7 @@ export default function ProductDetails() {
           </div>
 
           <div className="flex flex-wrap gap-4 text-sm mt-2 text-gray-600">
-            <button className="flex items-center gap-2 hover:text-primary transition">
+            <button onClick={() => addToWishlist(product._id)} className="flex items-center gap-2 hover:text-primary transition cursor-pointer">
               <FaHeart /> Add to Wishlist
             </button>
             <button className="flex items-center gap-2 hover:text-primary transition">
