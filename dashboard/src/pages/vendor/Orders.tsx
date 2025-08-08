@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Eye, Search, Filter, Download } from "lucide-react"
-import { useGetOrdersByVendorQuery } from "@/redux/features/order/orderApi"
+import { useGetOrdersByVendorQuery, useUpdateStatusMutation } from "@/redux/features/order/orderApi"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import moment from "moment";
@@ -57,7 +57,16 @@ const getStatusColor = (status: string) => {
 const Orders = () => {
   const { data: orders } = useGetOrdersByVendorQuery(undefined)
   const [selectedOrder, setSelectedOrder] = useState<any>(null)
+  const [updateStatus] = useUpdateStatusMutation()
   console.log(orders)
+
+  const handleStatusChange = async (e, id) => {
+    console.log(e, id)
+    const status = {
+      deliveryStatus: id
+    }
+    await updateStatus({id, status})
+  }
 
   return (
     <DashboardLayout>
@@ -200,17 +209,17 @@ const Orders = () => {
 
                   <div className="ml-2">
                     {/* <Button className="" variant="outline">Status</Button> */}
-                    <Select>
+                    <Select onValueChange={(e) => handleStatusChange(e,order._id)}>
                       <SelectTrigger className="w-[150px]">
                         <SelectValue placeholder="Change Status" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Change Status</SelectLabel>
-                          <SelectItem value="Order Placed">Order Placed</SelectItem>
-                          <SelectItem value="In Progress">In Progress</SelectItem>
+                          <SelectItem value="Order placed">Order Placed</SelectItem>
+                          <SelectItem value="In progress">In Progress</SelectItem>
                           <SelectItem value="Shipped">Shipped</SelectItem>
-                          <SelectItem value="Out for Delivery">Out for Delivery</SelectItem>
+                          <SelectItem value="Out for delivery">Out for Delivery</SelectItem>
                           <SelectItem value="Delivered">Delivered</SelectItem>
                         </SelectGroup>
                       </SelectContent>

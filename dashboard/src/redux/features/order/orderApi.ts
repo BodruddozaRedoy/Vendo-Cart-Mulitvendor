@@ -29,14 +29,27 @@ export const orderApi = createApi({
       providesTags: ["Order"],
     }),
     trackOrder: builder.query({
-        query:(id) => `/track/${id}`,
-        providesTags: ["Order"]
+      query: (id) => `/track/${id}`,
+      providesTags: ["Order"],
     }),
     getOrdersByVendor: builder.query({
-        query: () => `/vendor-orders`,
-        providesTags:["Order"]
-    })
+      query: () => `/vendor-orders`,
+      providesTags: ["Order"],
+    }),
+    updateStatus: builder.mutation({
+      query: ({ id, payload }) => ({
+        url: `/status/${id}`,
+        method: "PATCH",
+        body: payload,
+      }),
+    }),
   }),
 });
 
-export const { usePlaceOrderMutation, useGetMyOrdersQuery, useTrackOrderQuery, useGetOrdersByVendorQuery } = orderApi;
+export const {
+  usePlaceOrderMutation,
+  useGetMyOrdersQuery,
+  useTrackOrderQuery,
+  useGetOrdersByVendorQuery,
+  useUpdateStatusMutation,
+} = orderApi;

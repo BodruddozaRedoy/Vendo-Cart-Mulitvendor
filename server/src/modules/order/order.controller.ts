@@ -136,6 +136,8 @@ export const getOrdersByVendor = async (req: Request, res: Response) => {
 };
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
+  console.log(req.body)
+  console.log("first")
   try {
     const { orderId } = req.params;
     const { deliveryStatus } = req.body;
