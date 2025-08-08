@@ -11,6 +11,7 @@ import productRoutes from './modules/products/product.routes';
 import categoryRoutes from './modules/category/category.routes'
 import wishlistRoutes from './modules/wishlist/wishlist.routes'
 import cartRoutes from './modules/cart/cart.routes'
+import orderRoutes from './modules/order/order.routes'
 import { errorMiddleware } from './middleware/error.middleware';
 import env from './config/env';
 
@@ -38,6 +39,7 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/categories', categoryRoutes)
 app.use('/api/v1/cart', cartRoutes)
 app.use('/api/v1/wishlist', wishlistRoutes)
+app.use('/api/v1/order', orderRoutes)
 
 // Error handling middleware
 app.use(errorMiddleware);

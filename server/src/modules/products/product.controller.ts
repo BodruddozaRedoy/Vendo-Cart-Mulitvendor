@@ -166,15 +166,16 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
 // Get all products by a specific vendor (only the vendor can access their products)
 export const getAllProductsByVendor = async (req: Request, res: Response) => {
-  console.log("heello")
+  // console.log("heello")
   try {
-  console.log("heello inside")
+  // console.log("heello inside")
 
     const vendorId = req.user._id;
     console.log(vendorId)
 
     // Ensure the user is actually a vendor
     const vendor = await Vendor.findOne({ owner: vendorId });
+    console.log(vendor, "vendor id")
     if (!vendor) {
       return res.status(403).json({ message: "Access denied. You are not a registered vendor." });
     }

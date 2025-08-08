@@ -75,3 +75,17 @@ export interface IUser {
   isVerified?: boolean;
   isActive?: boolean;
 }
+
+export interface IOrder {
+  _id?: string
+  userId: string;
+  products: {
+    productId: string;
+    quantity: number;
+  }[];
+  paymentMethod: "cod" | "stripe";
+  paymentStatus: "pending" | "paid";
+  totalAmount: number;
+  deliveryStatus: "Order placed" | "In progress" | "Shipped" | "Out for delivery" | "Delivered";
+  createdAt: string
+}
