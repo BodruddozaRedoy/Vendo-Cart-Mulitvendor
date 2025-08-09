@@ -42,6 +42,7 @@ export const orderApi = createApi({
         method: "PATCH",
         body: payload,
       }),
+      invalidatesTags: ["Order"]
     }),
   }),
 });

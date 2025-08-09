@@ -55,17 +55,19 @@ const getStatusColor = (status: string) => {
 }
 
 const Orders = () => {
-  const { data: orders } = useGetOrdersByVendorQuery(undefined)
+  const { data: orders } = useGetOrdersByVendorQuery(undefined,{
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true
+  })
   const [selectedOrder, setSelectedOrder] = useState<any>(null)
   const [updateStatus] = useUpdateStatusMutation()
   console.log(orders)
 
-  const handleStatusChange = async (e, id) => {
-    console.log(e, id)
-    const status = {
-      deliveryStatus: id
-    }
-    await updateStatus({id, status})
+  const handleStatusChange = async (status:string, id:string) => {
+    console.log(status, id)
+    console.log({id, deliveryStatus:status})
+    await updateStatus({id, payload:{deliveryStatus:status}})
   }
 
   return (
@@ -209,7 +211,7 @@ const Orders = () => {
 
                   <div className="ml-2">
                     {/* <Button className="" variant="outline">Status</Button> */}
-                    <Select onValueChange={(e) => handleStatusChange(e,order._id)}>
+                    <Select disabled={order.deliveryStatus === "Delivered"} value={order.deliveryStatus} onValueChange={(e) => handleStatusChange(e,order._id)}>
                       <SelectTrigger className="w-[150px]">
                         <SelectValue placeholder="Change Status" />
                       </SelectTrigger>

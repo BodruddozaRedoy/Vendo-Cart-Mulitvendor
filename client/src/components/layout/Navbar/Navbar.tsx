@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logOut, setUser } from "@/redux/features/auth/authSlice";
 import useGetCart from "@/hooks/useGetCart";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 // top nav links 
@@ -163,6 +164,7 @@ const MainNavbar = () => {
       </div>
       {/* categories bar  */}
       <div className="hidden lg:flex z-50">
+        {/* <Skeleton className="w-full h-10"/> */}
         {/* select container  */}
         <div className="py-2  px-5 border-y border-l rounded-l-lg relative">
           <p onClick={() => setToggleCategory(!toggleCategory)} className="flex items-center gap-2 cursor-pointer select-none"><p className="w-[120px] truncate">{selectCategory}</p><TiArrowSortedDown /></p>
