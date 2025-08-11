@@ -41,10 +41,14 @@ export const vendorApi = createApi({
     approveVendor: build.mutation({
       query: (id) => ({
         url: `/approve/${id}`,
-        method:"PUT"
+        method: "PUT",
       }),
-      invalidatesTags: ["Vendor"]
-    })
+      invalidatesTags: ["Vendor"],
+    }),
+    getVendorCustomers: build.query({
+      query: (id) => `/store/customers`,
+      providesTags: ["Vendor"],
+    }),
   }),
 });
 
@@ -54,5 +58,6 @@ export const {
   useDeleteVendorMutation,
   useGetAllVendorQuery,
   useUpdateVendorMutation,
-  useApproveVendorMutation
+  useApproveVendorMutation,
+  useGetVendorCustomersQuery,
 } = vendorApi;

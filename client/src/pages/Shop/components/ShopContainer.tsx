@@ -18,12 +18,25 @@ import ProductCardPrimary from "@/components/common/ProductCardPrimary";
 import ProductCardSecondary from "@/components/common/ProductCardSecondary";
 import useGetAllProducts from "@/hooks/useGetAllProducts";
 import type { IProduct } from "@/types";
+import useAddToCart from "@/hooks/useAddToCart";
 
 
 
 export default function ShopContainer() {
     const {products} = useGetAllProducts()
     const [productLayout, setProductLayout] = useState("grid")
+    const {addToCart} = useAddToCart()
+
+    const handleAddToCart = (e:React.MouseEvent<HTMLDivElement>) => {
+        const button = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-add-to-cart]")
+        if(!button) return
+        console.log(button)
+        const productId = button?.getAttribute("data-id")
+        console.log(productId)
+        if(productId){
+            addToCart({productId})
+        }
+    }
     return (
         <div className="space-y-5 text-primary">
             {/* header  */}
@@ -73,7 +86,7 @@ export default function ShopContainer() {
             </div>
             <Separator className="w-full" />
             {
-                productLayout === "grid" && <div className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
+                productLayout === "grid" && <div onClick={handleAddToCart} className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
                     {
                         products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardPrimary product={product} key={index} />
@@ -83,7 +96,7 @@ export default function ShopContainer() {
             }
 
             {
-                productLayout === "bars" && <div className="flex flex-col gap-5">
+                productLayout === "bars" && <div onClick={handleAddToCart} className="flex flex-col gap-5">
                     {
                         products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardSecondary button={true} product={product} key={index} />

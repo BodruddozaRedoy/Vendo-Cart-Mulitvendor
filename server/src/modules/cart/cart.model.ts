@@ -8,6 +8,7 @@ export interface ICartProduct {
 
 export interface ICart extends Document {
   userId: mongoose.Types.ObjectId
+  vendorId: mongoose.Types.ObjectId
   products: ICartProduct[]
   total: number
   status: 'active' | 'ordered' | 'abandoned'
@@ -18,6 +19,8 @@ export interface ICart extends Document {
 const CartSchema: Schema = new Schema<ICart>(
   {
     userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    vendorId: { type: Schema.Types.ObjectId, ref: 'Vendor' },
+
 
     products: [
       {

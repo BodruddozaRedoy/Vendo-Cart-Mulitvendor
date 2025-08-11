@@ -5,7 +5,7 @@ import useAddToCart from "@/hooks/useAddToCart";
 import { Link } from "react-router";
 
 export default function ProductCardSecondary({ product, button }: { product: IProduct, button?: boolean }) {
-    const { addToCart, result } = useAddToCart()
+    const {  result } = useAddToCart()
     return (
         <div className="flex flex-col sm:flex-row gap-2 p-3 sm:p-5 border text-primary rounded-lg h-full justify-center items-center relative">
             <img
@@ -29,7 +29,7 @@ export default function ProductCardSecondary({ product, button }: { product: IPr
                     }
                 </div>
                 {
-                    button && <Button disabled={result.isLoading} onClick={() => addToCart({ productId: product._id })} variant={"outline"}>
+                    button && <Button disabled={result.isLoading} data-add-to-cart data-id={product._id} variant={"outline"}>
                         {result.isLoading ? "Adding..." : "Add to cart"}
                     </Button>
                 }

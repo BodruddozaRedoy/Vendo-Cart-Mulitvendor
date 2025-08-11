@@ -171,11 +171,11 @@ export const getAllProductsByVendor = async (req: Request, res: Response) => {
   // console.log("heello inside")
 
     const vendorId = req.user._id;
-    console.log(vendorId)
+    // console.log(vendorId)
 
     // Ensure the user is actually a vendor
     const vendor = await Vendor.findOne({ owner: vendorId });
-    console.log(vendor, "vendor id")
+    // console.log(vendor, "vendor id")
     if (!vendor) {
       return res.status(403).json({ message: "Access denied. You are not a registered vendor." });
     }

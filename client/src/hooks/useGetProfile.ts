@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 export const useGetProfile = () => {
     const isAuthenticated = useSelector((state:any) => state.auth.isAuthenticated)
     const user = useSelector((state:any) => state.auth.isAuthenticated)
-    console.log(isAuthenticated)
+    // console.log(isAuthenticated)
     const {data, isLoading, isError} = useGetUserQuery(undefined,{
         // refetchOnFocus: false,
         // refetchOnMountOrArgChange: false,

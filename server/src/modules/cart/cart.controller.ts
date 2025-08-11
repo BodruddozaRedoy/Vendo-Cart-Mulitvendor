@@ -4,62 +4,54 @@ import Cart from "./cart.model";
 import { Product } from "../products/product.model";
 
 // Add or update product in cart
-export const addToCart = async (req: Request, res: Response) => {
+export const addToCart = async (req:Request, res:Response) => {
   try {
-    const userId = req.user._id;
-    const { productId } = req.body;
+    const { productId, quantity } = req.body;
+    const userId = req.user.id;
 
-    if (!productId) {
-      return res.status(400).json({ message: "Product ID is required." });
-    }
+    const product = await Product.findById(productId).populate('vendor');
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    console.log(product)
 
-    // Check if product exists
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({ message: "Product not found." });
-    }
-
-    const quantity = 1; // Default quantity
-    const price = product.price; // Get price from DB
-
-    let cart = await Cart.findOne({ userId });
-
+    let cart = await Cart.findOne({ userId, status: 'active' }).populate('products.productId');
+    console.log(cart)
     if (!cart) {
-      // Create new cart
-      cart = new Cart({
+      // New cart
+      cart = await Cart.create({
         userId,
-        products: [{ productId, quantity, price }],
-        total: quantity * price,
+        products: [{ productId, quantity, price: product.price }],
+        total: product.price * quantity,
+        vendorId: product.vendor, // if storing
       });
-    } else {
-      // Check if product already in cart
-      const existingProduct = cart.products.find((p) =>
-        p.productId.toString() === productId
-      );
-
-      if (existingProduct) {
-        // Increment quantity
-        existingProduct.quantity += 1;
-      } else {
-        cart.products.push({ productId, quantity, price });
-      }
-
-      // Recalculate total
-      cart.total = cart.products.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
+      return res.json(cart);
     }
 
+    // ✅ Check vendor consistency
+    const existingVendorId = cart.vendorId || cart.products[0].productId.vendorId;
+    if (existingVendorId.toString() !== product.vendorId.toString()) {
+      return res.status(400).json({ message: 'You can only buy from one vendor at a time' });
+    }
+
+    // If same vendor → add/update product
+    const existingProduct = cart.products.find(
+      p => p.productId.toString() === productId
+    );
+
+    if (existingProduct) {
+      existingProduct.quantity += quantity;
+    } else {
+      cart.products.push({ productId, quantity, price: product.price });
+    }
+
+    cart.total = cart.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
     await cart.save();
-    res.status(200).json(cart);
+
+    res.json(cart);
   } catch (err) {
-    res.status(500).json({
-      error: "Failed to add to cart",
-      details: err instanceof Error ? err.message : err,
-    });
+    res.status(500).json({ message: err.message });
   }
 };
+
 
 // Get current user's cart
 export const getCart = async (req: Request, res: Response) => {
@@ -83,7 +75,7 @@ export const updateCartItem = async (req: Request, res: Response) => {
 
     const cart = await Cart.findOne({ userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
-console.log(cart.products[0].productId.toString())
+// console.log(cart.products[0].productId.toString())
     const item = cart.products.find(
       (p) => p.productId.toString() === productId
     );

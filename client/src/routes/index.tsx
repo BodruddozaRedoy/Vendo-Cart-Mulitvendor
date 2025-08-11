@@ -12,6 +12,7 @@ import LoginPage from "@/pages/Login/LoginPage";
 import RegisterPage from "@/pages/Register/RegisterPage";
 import OpenAShop from "@/pages/OpenAShop/OpneAShop";
 import { CheckoutPage } from "@/pages/Checkout/CheckoutPage";
+import Test from "@/pages/Test/Test";
 
 export const routes = createBrowserRouter([
     {
@@ -87,6 +88,10 @@ export const routes = createBrowserRouter([
             {
                 path: "/checkout",
                 Component: CheckoutPage
+            },
+            {
+                path: "/test",
+                Component:Test
             }
         ]
 

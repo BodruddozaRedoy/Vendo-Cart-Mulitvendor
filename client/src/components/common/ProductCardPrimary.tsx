@@ -1,11 +1,11 @@
 import useAddToCart from '@/hooks/useAddToCart';
 import type { IProduct } from '@/types';
 import { FaStar } from "react-icons/fa";
-import Loading from './Loading';
 import { Link } from 'react-router';
 
 export default function ProductCardPrimary({ product }: { product: IProduct }) {
-  const {addToCart, result} = useAddToCart()
+  const {result} = useAddToCart()
+  // console.log(product.vendor)
   // console.log(result)
 
   return (
@@ -25,9 +25,13 @@ export default function ProductCardPrimary({ product }: { product: IProduct }) {
         <p className='font-light text-xs sm:text-sm line-clamp-2'>{product.description}</p>
       </div>
 
-      <button disabled={result.isLoading} onClick={() => addToCart({productId: product._id})} className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer disabled:bg-primary/80'>
+      
+      <button disabled={result.isLoading} data-add-to-cart data-id={product._id}  className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer disabled:bg-primary/80'>
         {result.isLoading ? "Adding..." : "Add to cart"}
       </button>
+      {/* <button disabled={result.isLoading} onClick={() => addToCart({productId: product?._id})} className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer disabled:bg-primary/80'>
+        {result.isLoading ? "Adding..." : "Add to cart"}
+      </button> */}
 
       <div className='absolute top-0 right-0 bg-secondary py-1 px-2 sm:px-3 rounded-tr-lg rounded-bl-lg text-background text-xs sm:text-sm font-semibold'>
         -{product.discount}%

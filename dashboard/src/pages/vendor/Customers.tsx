@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Search, Filter, MoreHorizontal, UserPlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useGetVendorCustomersQuery } from "@/redux/features/vendor/vendorApi";
+import { useGetProfile } from "@/hooks/useGetProfile";
+import useGetVendorCustomers from "@/hooks/useGetVendorCustomers";
 
 const customers = [
   {
@@ -59,26 +62,44 @@ const customers = [
   }
 ];
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: boolean) => {
   switch (status) {
-    case "vip":
-      return "bg-warning text-warning-foreground";
-    case "active":
+    // case "vip":
+    //   return "bg-warning text-warning-foreground";
+    case true:
       return "bg-success text-success-foreground";
-    case "new":
-      return "bg-info text-info-foreground";
-    case "inactive":
+    // case "new":
+    //   return "bg-info text-info-foreground";
+    case false:
       return "bg-muted text-muted-foreground";
-    default:
-      return "bg-muted text-muted-foreground";
+    // default:
+    //   return "bg-muted text-muted-foreground";
   }
 };
 
 const getInitials = (name: string) => {
-  return name.split(" ").map(n => n[0]).join("").toUpperCase();
+  return name?.split(" ").map(n => n[0]).join("").toUpperCase();
 };
 
 const Customers = () => {
+   const { customers } = useGetVendorCustomers();
+
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth();
+
+  const newThisMonth = customers?.filter(customer => {
+    const createdDate = new Date(customer.createdAt);
+    return (
+      createdDate.getFullYear() === currentYear &&
+      createdDate.getMonth() === currentMonth
+    );
+  }).length || 0;
+
+  const activeCustomers = customers?.filter(customer => customer.isActive).length || 0;
+
+  const totalOrders = customers?.reduce((acc, curr) => acc + curr.orders, 0);
+  
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -98,26 +119,26 @@ const Customers = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold">2,345</div>
+              <div className="text-2xl font-bold">{customers?.length}</div>
               <p className="text-sm text-muted-foreground">Total Customers</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold">156</div>
+              <div className="text-2xl font-bold">{newThisMonth}</div>
               <p className="text-sm text-muted-foreground">New This Month</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold">89%</div>
+              <div className="text-2xl font-bold">{activeCustomers}</div>
               <p className="text-sm text-muted-foreground">Active Customers</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold">$1,234</div>
-              <p className="text-sm text-muted-foreground">Avg. Customer Value</p>
+              <div className="text-2xl font-bold">{totalOrders}</div>
+              <p className="text-sm text-muted-foreground">Total Order</p>
             </CardContent>
           </Card>
         </div>
@@ -143,8 +164,8 @@ const Customers = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {customers.map((customer) => (
-                <div key={customer.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+              {customers?.map((customer) => (
+                <div key={customer._id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-4">
                     <Avatar className="w-12 h-12">
                       <AvatarFallback className="bg-primary/10 text-primary">
@@ -154,13 +175,13 @@ const Customers = () => {
                     <div>
                       <div className="flex items-center gap-3 mb-1">
                         <span className="font-medium">{customer.name}</span>
-                        <Badge className={getStatusColor(customer.status)}>
-                          {customer.status}
+                        <Badge className={getStatusColor(customer.isActive)}>
+                          {customer.isActive ? "Active" : "Inactive"}
                         </Badge>
                       </div>
                       <div className="text-sm text-muted-foreground space-y-1">
                         <p>{customer.email}</p>
-                        <p>Joined {customer.joinedDate} • Last order {customer.lastOrder}</p>
+                        <p>Joined {customer.createdAt} • Last order {customer.lastOrder}</p>
                       </div>
                     </div>
                   </div>

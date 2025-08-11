@@ -39,13 +39,15 @@ export const CheckoutPage = () => {
   const tax = total * 0.1
   const grandTotal = total + shippingFee + tax
 
-  const handlePlaceOrder = async () => {
+  console.log(deliveryInfo)
+  const handlePlaceOrder = async (e:any) => {
+    e.preventDefault()
     if (!cart || cart.length === 0) {
       toast.success("Your cart is empty")
       return
     }
 
-    if (!deliveryInfo.fullName || !deliveryInfo.lastName || !deliveryInfo.address || !deliveryInfo.city || !deliveryInfo.zipCode) {
+    if (!deliveryInfo.firstName || !deliveryInfo.lastName || !deliveryInfo.address || !deliveryInfo.city || !deliveryInfo.zipCode) {
       return toast.error("Delivery info required")
     }
 
@@ -53,7 +55,7 @@ export const CheckoutPage = () => {
       product: item.productId._id,
       quantity: item.quantity,
     }))
-    console.log(cartItems)
+    console.log(paymentMethod)
 
     if (paymentMethod === "stripe") {
       if (!stripe || !elements) {
@@ -112,7 +114,7 @@ export const CheckoutPage = () => {
   }
 
   return (
-    <form className="max-w-6xl mx-auto p-6">
+    <form onSubmit={handlePlaceOrder} className="max-w-6xl mx-auto p-6 ">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -264,7 +266,7 @@ export const CheckoutPage = () => {
               {paymentMethod === "stripe" ? (
                 <Button
                   type="submit"
-                  onClick={handlePlaceOrder}
+                  // onClick={handlePlaceOrder}
                   className="w-full py-6 bg-gradient-to-r from-primary to-blue-500 hover:from-primary hover:to-blue-600"
                   disabled={isLoading}
                 >
@@ -274,7 +276,7 @@ export const CheckoutPage = () => {
                 <Button
                   type="submit"
                   variant="outline"
-                  onClick={handlePlaceOrder}
+                  // onClick={handlePlaceOrder}
                   className="w-full py-6 border-primary text-primary hover:bg-primary/10"
                   disabled={isLoading}
                 >
