@@ -139,7 +139,7 @@ const MainNavbar = () => {
   const [selectCategory, setSelectCategory] = useState("All Categories")
   const [toggleCategory, setToggleCategory] = useState(false)
   const [logout, result] = useLogoutMutation()
-  const {cart} = useGetCart()
+  const {cartProducts} = useGetCart()
   // const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
 
   const dispatch = useDispatch()
@@ -218,7 +218,7 @@ const MainNavbar = () => {
         {/* cart  */}
         <Link to={"/cart"} className="flex relative gap-2 items-center text-primary font-semibold cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all">
           <img className="w-5 " src="/public/cart.svg" alt=""/>
-          <div className="flex items-start"><p>Cart</p><p className="text-xs bg-muted w-4 h-4 flex items-center justify-center absolute top-0 right-0 rounded-full text-center">{cart?.length || "0"}</p></div>
+          <div className="flex items-start"><p>Cart</p><p className="text-xs bg-muted w-4 h-4 flex items-center justify-center absolute top-0 right-0 rounded-full text-center">{cartProducts?.length || "0"}</p></div>
         </Link>
 
         {/* mobile bars  */}

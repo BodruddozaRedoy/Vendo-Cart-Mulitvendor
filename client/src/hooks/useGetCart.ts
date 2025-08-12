@@ -7,5 +7,5 @@ export default function useGetCart() {
     refetchOnReconnect: true
   })
   // console.log(cart)
-  return {cart:data?.products, isLoading}
+  return {cart:data, cartProducts:data?.products, isLoading}
 }

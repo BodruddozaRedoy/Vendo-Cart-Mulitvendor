@@ -4,37 +4,50 @@ import Cart from "./cart.model";
 import { Product } from "../products/product.model";
 
 // Add or update product in cart
-export const addToCart = async (req:Request, res:Response) => {
+export const addToCart = async (req: Request, res: Response) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId, quantity, vendorId } = req.body;
     const userId = req.user.id;
+    // console.log("user", userId)
+    // Validate quantity
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ message: "Quantity must be greater than 0" });
+    }
 
-    const product = await Product.findById(productId).populate('vendor');
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-    console.log(product)
+    if(!vendorId){
+      return res.status(400).json({ message: "Vendor id must be required" });
+    }
 
-    let cart = await Cart.findOne({ userId, status: 'active' }).populate('products.productId');
-    console.log(cart)
+    // Check product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Check stock
+    if (product.quantity !== undefined && product.quantity < quantity) {
+      return res.status(400).json({
+        message: `Only ${product.quantity} items available in stock. Requested: ${quantity}`,
+      });
+    }
+
+    // Find existing cart for user
+    let cart = await Cart.findOne({ userId, status: "active" });
+
     if (!cart) {
-      // New cart
+      // Create a new cart if none exists
       cart = await Cart.create({
         userId,
+        vendorId,
         products: [{ productId, quantity, price: product.price }],
         total: product.price * quantity,
-        vendorId: product.vendor, // if storing
       });
       return res.json(cart);
     }
 
-    // ✅ Check vendor consistency
-    const existingVendorId = cart.vendorId || cart.products[0].productId.vendorId;
-    if (existingVendorId.toString() !== product.vendorId.toString()) {
-      return res.status(400).json({ message: 'You can only buy from one vendor at a time' });
-    }
-
-    // If same vendor → add/update product
+    // Check if product already exists in cart
     const existingProduct = cart.products.find(
-      p => p.productId.toString() === productId
+      (p) => p.productId.toString() === productId
     );
 
     if (existingProduct) {
@@ -43,11 +56,16 @@ export const addToCart = async (req:Request, res:Response) => {
       cart.products.push({ productId, quantity, price: product.price });
     }
 
-    cart.total = cart.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
-    await cart.save();
+    // Update total
+    cart.total = cart.products.reduce(
+      (sum, p) => sum + p.price * p.quantity,
+      0
+    );
 
+    await cart.save();
     res.json(cart);
-  } catch (err) {
+
+  } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
 };
@@ -60,10 +78,45 @@ export const getCart = async (req: Request, res: Response) => {
     const cart = await Cart.findOne({ userId }).populate("products.productId");
 
     if (!cart) return res.status(404).json({ message: "Cart not found" });
-
+    console.log(cart)
     res.status(200).json(cart);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch cart", details: err });
+  }
+};
+
+// Get cart summary with vendor information
+export const getCartSummary = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const cart = await Cart.findOne({ userId })
+      .populate("products.productId")
+      .populate("vendorId", "name email");
+
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    const summary = {
+      cartId: cart._id,
+      totalItems: cart.products.reduce((sum, item) => sum + item.quantity, 0),
+      totalPrice: cart.total,
+      vendor: cart.vendorId ? {
+        id: cart.vendorId,
+        name: (cart.vendorId as any).name,
+        email: (cart.vendorId as any).email
+      } : null,
+      products: cart.products.map(item => ({
+        productId: item.productId,
+        name: (item.productId as any).name,
+        quantity: item.quantity,
+        price: item.price,
+        subtotal: item.price * item.quantity
+      })),
+      status: cart.status
+    };
+
+    res.status(200).json(summary);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch cart summary", details: err });
   }
 };
 
@@ -142,9 +195,31 @@ export const clearCart = async (req: Request, res: Response) => {
 
     cart.products = [];
     cart.total = 0;
+    cart.vendorId = undefined; // Reset vendorId when clearing cart
     await cart.save();
 
     res.status(200).json({ message: "Cart cleared" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to clear cart", details: err });
+  }
+};
+
+// Clear cart and allow switching to different vendor
+export const clearCartForNewVendor = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const cart = await Cart.findOne({ userId });
+
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    cart.products = [];
+    cart.total = 0;
+    cart.vendorId = undefined; // Reset vendorId to allow new vendor
+    await cart.save();
+
+    res.status(200).json({ 
+      message: "Cart cleared. You can now add products from a different vendor." 
+    });
   } catch (err) {
     res.status(500).json({ error: "Failed to clear cart", details: err });
   }

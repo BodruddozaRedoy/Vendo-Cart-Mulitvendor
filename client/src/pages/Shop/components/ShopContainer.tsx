@@ -32,11 +32,15 @@ export default function ShopContainer() {
         if(!button) return
         console.log(button)
         const productId = button?.getAttribute("data-id")
-        console.log(productId)
-        if(productId){
-            addToCart({productId})
+        const quantity = button?.getAttribute("data-quantity")
+        const vendorId = button?.getAttribute("data-vendor")
+
+        console.log("vendorId", vendorId)
+        if(productId && quantity){
+            addToCart({productId, quantity, vendorId})
         }
     }
+
     return (
         <div className="space-y-5 text-primary">
             {/* header  */}

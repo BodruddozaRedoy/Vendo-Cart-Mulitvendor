@@ -13,7 +13,7 @@ export default function CartPage() {
   const [cart, setCart] = useState<ICartProduct[]>([]);
   const [coupon, setCoupon] = useState('');
   const [discount, setDiscount] = useState(0);
-  const { cart: initialCart, isLoading:cartLoading } = useGetCart()
+  const { cartProducts: initialCart, isLoading:cartLoading } = useGetCart()
 
   const [updateCart, updateResult] = useUpdateCartMutation()
   const [deleteCartItem, deleteResult] = useDeleteCartMutation()

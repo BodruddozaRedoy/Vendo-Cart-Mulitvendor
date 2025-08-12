@@ -9,10 +9,15 @@ export default function useAddToCart() {
   const { data } = useGetProfile();
   const {cart} = useGetCart()
   // console.log(cart[0].productId.vendor)
+  console.log(cart)
 
   const addToCart = (payload: any) => {
     const role = data?.data?.role;
     console.log(payload)
+
+    if(!data?.data){
+      return toast.error("Please login first")
+    }
 
     if (role === "vendor") {
       toast.error("Vendors cannot add products to the cart");

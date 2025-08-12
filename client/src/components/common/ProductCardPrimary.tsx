@@ -26,7 +26,7 @@ export default function ProductCardPrimary({ product }: { product: IProduct }) {
       </div>
 
       
-      <button disabled={result.isLoading} data-add-to-cart data-id={product._id}  className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer disabled:bg-primary/80'>
+      <button disabled={result.isLoading} data-add-to-cart data-id={product._id} data-quantity={1} data-vendor={product.vendor?._id} className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer disabled:bg-primary/80'>
         {result.isLoading ? "Adding..." : "Add to cart"}
       </button>
       {/* <button disabled={result.isLoading} onClick={() => addToCart({productId: product?._id})} className='py-2 sm:py-3 w-full bg-primary text-background rounded-b-lg text-sm sm:text-base cursor-pointer disabled:bg-primary/80'>
