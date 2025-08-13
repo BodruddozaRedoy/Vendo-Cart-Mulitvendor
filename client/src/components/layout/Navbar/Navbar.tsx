@@ -17,18 +17,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { TiArrowSortedDown } from "react-icons/ti";
 import { HiMiniBars3CenterLeft } from "react-icons/hi2";
-import { IoLanguage } from "react-icons/io5";
-import LoginPage from "@/pages/Login/LoginPage";
 import { Button } from "@/components/ui/button";
 import { RiLoginBoxFill } from "react-icons/ri";
-import { authApi, useGetUserQuery, useLoginUserMutation, useLogoutMutation } from "@/redux/features/auth/authApi";
+import { authApi, useLogoutMutation } from "@/redux/features/auth/authApi";
 import { useGetProfile } from "@/hooks/useGetProfile";
 import { toast } from "sonner";
-import { useDispatch, useSelector } from "react-redux";
-import { logOut, setUser } from "@/redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { logOut } from "@/redux/features/auth/authSlice";
 import useGetCart from "@/hooks/useGetCart";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 
 
 // top nav links 
@@ -139,11 +135,11 @@ const MainNavbar = () => {
   const [selectCategory, setSelectCategory] = useState("All Categories")
   const [toggleCategory, setToggleCategory] = useState(false)
   const [logout, result] = useLogoutMutation()
-  const {cartProducts} = useGetCart()
+  const {cart} = useGetCart()
   // const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
 
   const dispatch = useDispatch()
-  const { data:user } = useGetProfile()
+  const { user } = useGetProfile()
 
   const handleLogout = async () => {
     await logout(null).unwrap()
@@ -218,7 +214,7 @@ const MainNavbar = () => {
         {/* cart  */}
         <Link to={"/cart"} className="flex relative gap-2 items-center text-primary font-semibold cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all">
           <img className="w-5 " src="/public/cart.svg" alt=""/>
-          <div className="flex items-start"><p>Cart</p><p className="text-xs bg-muted w-4 h-4 flex items-center justify-center absolute top-0 right-0 rounded-full text-center">{cartProducts?.length || "0"}</p></div>
+          <div className="flex items-start"><p>Cart</p><p className="text-xs bg-muted w-4 h-4 flex items-center justify-center absolute top-0 right-0 rounded-full text-center">{cart?.products?.length || "0"}</p></div>
         </Link>
 
         {/* mobile bars  */}

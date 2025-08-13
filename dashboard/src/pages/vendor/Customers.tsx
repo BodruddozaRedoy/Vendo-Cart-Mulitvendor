@@ -5,62 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Search, Filter, MoreHorizontal, UserPlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useGetVendorCustomersQuery } from "@/redux/features/vendor/vendorApi";
-import { useGetProfile } from "@/hooks/useGetProfile";
 import useGetVendorCustomers from "@/hooks/useGetVendorCustomers";
 
-const customers = [
-  {
-    id: "CUST-001",
-    name: "John Doe",
-    email: "john@example.com",
-    orders: 12,
-    totalSpent: "$3,240.50",
-    status: "active",
-    joinedDate: "Jan 2024",
-    lastOrder: "2 days ago"
-  },
-  {
-    id: "CUST-002",
-    name: "Jane Smith", 
-    email: "jane@example.com",
-    orders: 8,
-    totalSpent: "$1,890.25",
-    status: "active",
-    joinedDate: "Feb 2024",
-    lastOrder: "1 week ago"
-  },
-  {
-    id: "CUST-003",
-    name: "Mike Johnson",
-    email: "mike@example.com",
-    orders: 15,
-    totalSpent: "$4,567.80",
-    status: "vip",
-    joinedDate: "Dec 2023",
-    lastOrder: "Yesterday"
-  },
-  {
-    id: "CUST-004",
-    name: "Sarah Wilson",
-    email: "sarah@example.com",
-    orders: 3,
-    totalSpent: "$234.75",
-    status: "new",
-    joinedDate: "Nov 2024",
-    lastOrder: "3 days ago"
-  },
-  {
-    id: "CUST-005",
-    name: "David Brown",
-    email: "david@example.com",
-    orders: 1,
-    totalSpent: "$89.99",
-    status: "inactive",
-    joinedDate: "Oct 2024",
-    lastOrder: "2 months ago"
-  }
-];
 
 const getStatusColor = (status: boolean) => {
   switch (status) {
@@ -82,8 +28,8 @@ const getInitials = (name: string) => {
 };
 
 const Customers = () => {
-   const { customers } = useGetVendorCustomers();
-
+  const { customers } = useGetVendorCustomers();
+  console.log(customers)
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth();
@@ -99,7 +45,7 @@ const Customers = () => {
   const activeCustomers = customers?.filter(customer => customer.isActive).length || 0;
 
   const totalOrders = customers?.reduce((acc, curr) => acc + curr.orders, 0);
-  
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -185,14 +131,14 @@ const Customers = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-right mr-4">
                     <div className="font-semibold text-lg">{customer.totalSpent}</div>
                     <div className="text-sm text-muted-foreground">
                       {customer.orders} orders
                     </div>
                   </div>
-                  
+
                   <Button variant="ghost" size="icon">
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>

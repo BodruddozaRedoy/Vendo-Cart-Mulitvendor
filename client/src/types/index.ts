@@ -3,20 +3,23 @@ export interface ICategories {
   image: string;
   subcategories: string[];
 }
+
+
 export interface ICartProduct {
-  _id?: string;
+  _id?:string
   productId: IProduct;
   quantity: number;
-  price: number; // optional: to track price at time of adding
+  price: number
 }
 
 export interface ICart {
   userId: string;
+  vendorId:string;
   products: ICartProduct[];
   total: number;
   status: "active" | "ordered" | "abandoned";
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IVendor {

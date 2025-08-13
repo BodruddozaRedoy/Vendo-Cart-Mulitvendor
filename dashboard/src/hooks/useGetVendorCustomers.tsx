@@ -10,5 +10,5 @@ export default function useGetVendorCustomers() {
     refetchOnReconnect: true
   })
   console.log(data)
-  return{customers:data}
+  return{customers:data?.data}
 }

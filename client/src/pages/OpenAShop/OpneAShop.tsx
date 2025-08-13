@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 
 const OpenAShop = () => {
-  const { data: user } = useGetProfile();
+  const { user } = useGetProfile();
   const [addVendor] = useAddVendorMutation();
   const navigate = useNavigate()
   // console.log(user.data)

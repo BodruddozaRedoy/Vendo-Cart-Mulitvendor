@@ -188,16 +188,23 @@ export const deleteCartItem = async (req: Request, res: Response) => {
 // Optional: Clear entire cart
 export const clearCart = async (req: Request, res: Response) => {
   try {
-    const userId = req.user.id;
-    const cart = await Cart.findOne({ userId });
+    // console.log(req.user)
+    // const userId = req.user_.id;
+    const cartId = req.params.id
+    console.log(cartId)
+    if(!cartId){
+      return res.status(404).json({ message: "Cart id not found" });
+    }
+    const cart = await Cart.findOneAndDelete({ _id:cartId });
 
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    cart.products = [];
-    cart.total = 0;
-    cart.vendorId = undefined; // Reset vendorId when clearing cart
-    await cart.save();
+    // cart.products = [];
+    // cart.total = 0;
+    // cart.vendorId = undefined; // Reset vendorId when clearing cart
+    // await cart.save();
 
+    
     res.status(200).json({ message: "Cart cleared" });
   } catch (err) {
     res.status(500).json({ error: "Failed to clear cart", details: err });

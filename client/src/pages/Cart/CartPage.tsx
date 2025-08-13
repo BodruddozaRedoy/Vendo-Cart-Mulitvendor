@@ -3,17 +3,19 @@ import { FiPlus, FiMinus } from 'react-icons/fi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 import useGetCart from '@/hooks/useGetCart';
-import { type IProduct, type ICart, type ICartProduct } from '@/types';
+import { type IProduct, type ICart } from '@/types';
 import { useClearCartMutation, useDeleteCartMutation, useUpdateCartMutation } from '@/redux/features/cart/cartApi';
 import Loading from '@/components/common/Loading';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 
 export default function CartPage() {
-  const [cart, setCart] = useState<ICartProduct[]>([]);
+  const navigate = useNavigate()
+  const [cart, setCart] = useState<ICart>();
   const [coupon, setCoupon] = useState('');
   const [discount, setDiscount] = useState(0);
-  const { cartProducts: initialCart, isLoading:cartLoading } = useGetCart()
+  const { cart:initialCart, isLoading:cartLoading } = useGetCart()
 
   const [updateCart, updateResult] = useUpdateCartMutation()
   const [deleteCartItem, deleteResult] = useDeleteCartMutation()
@@ -28,22 +30,28 @@ export default function CartPage() {
 
 
   const updateQuantity = async (id: any, delta: any) => {
-    console.log(id)
+    // console.log(id)
     await updateCart({ productId: id, quantity: delta })
-    // setCart(prev =>
-    //   prev?.map(item =>
-    //     item._id === id
-    //       ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-    //       : item
-    //   )
-    // );
   };
 
   const removeItem = async (id: any) => {
     // console.log(id)
+    // if(initialCart.length === 1){
+    //   clearCart(dbCart?._id)
+    // }
     await deleteCartItem(id)
-    // setCart(prev => prev?.filter(item => item._id !== id));
   };
+
+  const handleClearCart = async () => {
+    await clearCart(initialCart._id)
+    .then(res => {
+      if(res.data.message) {
+        toast.success("Cart cleared")
+        window.location.href = "/shop"
+      }
+    })
+
+  }
 
   const applyCoupon = () => {
     if (coupon.toLowerCase() === 'save10') {
@@ -54,25 +62,22 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cart?.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const discountAmount = (subtotal * discount) / 100;
-  const total = subtotal - discountAmount;
+  const subtotal = cart?.products?.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discountAmount = (subtotal! * discount) / 100;
+  const total = subtotal! - discountAmount;
 
-  // if(!initialCart) return <LoadingScreen/>
-  // if(result.isLoading){
-  //    <div className='w-screen h-screen absolute top-0 z-[9999] left-0 flex items-center justify-center'><Loading/></div>
-  // }
-  console.log(deleteResult)
+  
+  // console.log(deleteResult)
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-primary grid lg:grid-cols-[2fr_1fr] gap-10">
       {/* Cart Table */}
       <div>
         <div className='flex items-center justify-between'>
           <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
-          <Button onClick={() => clearCart(0)} disabled={cart?.length === 0}>{clearCartResult.isLoading ? "Clearing..." : "Clear Cart"}</Button>
+          <Button onClick={() => handleClearCart()} disabled={!cart}>{clearCartResult.isLoading ? "Clearing..." : "Clear Cart"}</Button>
         </div>
 
-        {cart?.length === 0 ? (
+        {cart?.products?.length === 0 ? (
           <p className="text-primary/50 text-lg">Your cart is empty.</p>
         ) : (<>
           {deleteResult.isLoading || updateResult.isLoading || cartLoading ? <div className='h-auto w-full flex items-center justify-center mt-5'><Loading /></div> : (
@@ -85,7 +90,7 @@ export default function CartPage() {
                 <div className="p-4 text-center">Total</div>
 
                 {/* Items */}
-                {cart?.map(item => (
+                {cart?.products?.map(item => (
                   <React.Fragment key={item._id} >
                     <div className="col-span-3 p-4 flex items-center gap-4 border-t">
                       <img src={item.productId.image} alt={item.productId.name} className="w-16 h-16 object-cover rounded-md" />
@@ -161,14 +166,14 @@ export default function CartPage() {
               placeholder="Enter coupon code"
               className="flex-1 border px-4 py-2 rounded-md shadow-sm"
             />
-            <Button disabled={!cart?.length} onClick={applyCoupon}>Apply</Button>
+            <Button disabled={!cart?.products?.length} onClick={applyCoupon}>Apply</Button>
           </div>
           {discount > 0 && (
             <p className="text-green-600 text-sm mt-2">Coupon applied: {discount}% off</p>
           )}
         </div>
 
-        <Link to={"/checkout"}><Button disabled={!cart?.length} className="w-full mt-6 py-3 text-lg">Checkout</Button></Link>
+        <Link to={"/checkout"}><Button disabled={!cart?.products?.length} className="w-full mt-6 py-3 text-lg">Checkout</Button></Link>
       </div>
     </div>
   );

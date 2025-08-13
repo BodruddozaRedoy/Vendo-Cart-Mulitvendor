@@ -20,7 +20,7 @@ router.get('/', getCart);
 router.get('/summary', getCartSummary);
 router.put('/', updateCartItem);
 router.delete('/remove/:productId', deleteCartItem);
-router.delete('/clear', clearCart);
+router.delete('/clear/:id', clearCart);
 router.delete('/clear-for-new-vendor', clearCartForNewVendor);
 
 export default router;

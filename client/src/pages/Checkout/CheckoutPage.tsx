@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -15,16 +15,30 @@ import { usePlaceOrderMutation } from "@/redux/features/order/orderApi"
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js"
 import { toast } from "sonner"
 import { useClearCartMutation } from "@/redux/features/cart/cartApi"
+import { useGetProfile } from "@/hooks/useGetProfile"
+import type { IUser } from "@/types"
+
+
+interface DeliverInfo {
+  fullName: string;
+  phone: string;
+  address: string;
+}
 
 export const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = React.useState<"stripe" | "cod">("stripe")
-  const [deliveryInfo, setDeliveryInfo] = useState<any>({
-    firstName: "",
-    lastName: "",
+  const { user } = useGetProfile()
+  const [deliveryInfo, setDeliveryInfo] = useState<DeliverInfo>({
+    fullName: "",
+    phone: "",
     address: "",
-    city: "",
-    zipCode: ""
+
   })
+  // console.log(deliveryInfo.address)
+  useEffect(() => {
+    setDeliveryInfo({fullName: user.fullName, address: user.address.delivery, phone: user.phone})
+
+  }, [user])
   const { cart } = useGetCart()
   // const { toast } = useToast()
   const [clearCart] = useClearCartMutation()
@@ -34,24 +48,24 @@ export const CheckoutPage = () => {
   const stripe = useStripe()
   const elements = useElements()
 
-  const total = cart?.reduce((acc: any, item: any) => acc + item.price * item.quantity, 0) || 0
+  const total = cart?.products.reduce((acc: any, item: any) => acc + item.price * item.quantity, 0) || 0
   const shippingFee = 5.99
   const tax = total * 0.1
   const grandTotal = total + shippingFee + tax
 
-  console.log(deliveryInfo)
-  const handlePlaceOrder = async (e:any) => {
+  // console.log(deliveryInfo)
+  const handlePlaceOrder = async (e: any) => {
     e.preventDefault()
-    if (!cart || cart.length === 0) {
+    if (!cart || cart?.products.length === 0) {
       toast.success("Your cart is empty")
       return
     }
 
-    if (!deliveryInfo.firstName || !deliveryInfo.lastName || !deliveryInfo.address || !deliveryInfo.city || !deliveryInfo.zipCode) {
+    if (!deliveryInfo) {
       return toast.error("Delivery info required")
     }
 
-    const cartItems = cart.map((item: any) => ({
+    const cartItems = cart?.products.map((item: any) => ({
       product: item.productId._id,
       quantity: item.quantity,
     }))
@@ -89,8 +103,8 @@ export const CheckoutPage = () => {
 
         toast.success("Order placed successfully!")
         // dispatch(clearCart())
-        clearCart(0)
-        navigate("/account/my-orders")
+        clearCart(cart._id)
+        window.location.href = ("/account/my-orders")
       } catch (err: any) {
         toast.error("Order failed")
       }
@@ -105,8 +119,8 @@ export const CheckoutPage = () => {
         }).unwrap()
 
         toast.success("Order placed successfully")
-        clearCart(0)
-        navigate("/account/my-orders")
+        clearCart(cart._id)
+        window.location.href = ("/account/my-orders")
       } catch (err: any) {
         toast.error("Order failed")
       }
@@ -129,7 +143,7 @@ export const CheckoutPage = () => {
             </CardHeader>
             <CardContent className="p-0">
               <div className="divide-y">
-                {cart?.map((item: any) => (
+                {cart?.products?.map((item: any) => (
                   <div key={item._id} className="flex items-center p-4 hover:bg-gray-50/50">
                     <div className="relative">
                       <img
@@ -165,18 +179,18 @@ export const CheckoutPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium text-gray-600">First Name</Label>
-                  <Input required className="mt-1 p-2 border rounded-md" onChange={(e) => setDeliveryInfo({ ...deliveryInfo, firstName: e.target.value })} />
+                  <Input required className="mt-1 p-2 border rounded-md" value={deliveryInfo.fullName} onChange={(e) => setDeliveryInfo({ ...deliveryInfo, fullName: e.target.value })} />
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">Last Name</Label>
-                  <Input required className="mt-1 p-2 border rounded-md" onChange={(e) => setDeliveryInfo({ ...deliveryInfo, lastName: e.target.value })} />
+                  <Label className="text-sm font-medium text-gray-600">Phone Number</Label>
+                  <Input value={deliveryInfo.phone} required className="mt-1 p-2 border rounded-md" onChange={(e) => setDeliveryInfo({ ...deliveryInfo, phone: e.target.value })} />
                 </div>
               </div>
               <div>
                 <Label className="text-sm font-medium text-gray-600">Address</Label>
-                <Input required className="mt-1 p-2 border rounded-md" onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })} />
+                <Input value={deliveryInfo.address} required className="mt-1 p-2 border rounded-md" onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium text-gray-600">City</Label>
                   <Input required className="mt-1 p-2 border rounded-md" onChange={(e) => setDeliveryInfo({ ...deliveryInfo, city: e.target.value })} />
@@ -185,7 +199,7 @@ export const CheckoutPage = () => {
                   <Label className="text-sm font-medium text-gray-600">ZIP Code</Label>
                   <Input required className="mt-1 p-2 border rounded-md" onChange={(e) => setDeliveryInfo({ ...deliveryInfo, zipCode: e.target.value })} />
                 </div>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>

@@ -167,7 +167,7 @@ const Orders = () => {
                     </DialogTrigger>
                     <DialogContent className="w-full">
                       <DialogHeader>
-                        <DialogTitle>Tracking Order: {selectedOrder?._id}</DialogTitle>
+                        <DialogTitle>Tracking Order: {selectedOrder?._id} ({order.paymentMethod === "cod" ? "COD": "Paid"})</DialogTitle>
                       </DialogHeader>
 
                       <div className="mt-4 space-y-4">
@@ -178,7 +178,7 @@ const Orders = () => {
                               <TableHead className="">Index</TableHead>
                               <TableHead>Name</TableHead>
                               <TableHead>Quantity</TableHead>
-                              <TableHead className="">Price</TableHead>
+                              <TableHead className="text-right">Price</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -187,7 +187,7 @@ const Orders = () => {
                                 <TableCell className="font-medium">{index + 1}</TableCell>
                                 <TableCell>{p.product.name}</TableCell>
                                 <TableCell>{p.quantity}</TableCell>
-                                <TableCell className="">{p.product.price}</TableCell>
+                                <TableCell className="text-right">{p.product.price}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
@@ -201,9 +201,11 @@ const Orders = () => {
 
                         <p className="text-primary font-semibold">Customer Details:</p>
                         <div className="ml-3">
-                          <p className="text-muted-foreground text-sm">{order.userId.fullName}</p>
-                          <p className="text-muted-foreground text-sm">{order?.address}</p>
+                          <p className="text-muted-foreground text-sm">{order.deliveryInfo.fullName}</p>
+                          <p className="text-muted-foreground text-sm">{order?.deliveryInfo.address}</p>
                           <p className="text-muted-foreground text-sm">{order.userId.email}</p>
+                          <p className="text-muted-foreground text-sm">{order.deliveryInfo.phone}</p>
+                          
                         </div>
                       </div>
                     </DialogContent>
