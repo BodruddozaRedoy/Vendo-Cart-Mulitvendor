@@ -29,16 +29,27 @@ export function LoginForm({
       toast.error("Something went wrong")
     }
   }
+  console.log(result?.data?.data?.role)
   useEffect(() => {
     if (result.isSuccess) {
+      const role = result.data?.data?.role;
+
       toast.success("Logged in Successfully");
-      navigate("/");
+
+      if (role === "admin") {
+        window.location.href = "/admin"; // ⬅️ Full reload and correct route
+      } else if (role === "vendor") {
+        window.location.href = "/vendor";
+      } else {
+        toast.error("Invalid role. Cannot redirect.");
+      }
     }
 
     if (result.isError) {
       toast.error("Invalid Credentials");
     }
-  }, [result.isSuccess, result.isError, navigate]);
+  }, [result.isSuccess, result.isError]);
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">

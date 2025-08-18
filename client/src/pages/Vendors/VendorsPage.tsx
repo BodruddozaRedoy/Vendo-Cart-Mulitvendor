@@ -2,8 +2,14 @@ import { Button } from '@/components/ui/button'
 import Features from '../Home/components/Feature'
 import VendorContainer from './components/VendorContainer'
 import VendorFilter from './components/VendorFilter'
+import { Link } from 'react-router'
+import { useGetAllVendorQuery } from '@/redux/features/vendor/vendorApi'
+import useGetAllVendor from '@/hooks/useGetAllVendor'
+import LoadingScreen from '@/components/common/LoadingScreen'
 
 export default function VendorsPage() {
+  const {vendors} = useGetAllVendor()
+  if(!vendors) return <LoadingScreen/>
   return (
     <div className='text-primary container mx-auto px-4 sm:px-6 lg:px-8'>
       {/* Header Section */}
@@ -13,7 +19,7 @@ export default function VendorsPage() {
             Vendor Listing
           </h1>
           <p className='text-sm sm:text-base text-muted-foreground'>
-            We have 780 vendors now
+            We have {vendors.length} vendors now
           </p>
         </div>
         
@@ -24,9 +30,11 @@ export default function VendorsPage() {
           <Button variant="ghost" size="sm" className='text-sm hidden sm:inline-flex'>
             Become an Affiliate
           </Button>
+          <Link to={"/open-a-shop"}>
           <Button size="sm" className='text-sm w-full sm:w-auto'>
             Open a Shop
           </Button>
+          </Link>
         </div>
       </div>
 
@@ -39,7 +47,7 @@ export default function VendorsPage() {
 
         {/* Main Content - full width on mobile, 3 cols on desktop */}
         <main className='lg:col-span-3 space-y-5'>
-          <VendorContainer/>
+          <VendorContainer vendors={vendors}/>
         </main>
 
         {/* Features Section - always full width */}

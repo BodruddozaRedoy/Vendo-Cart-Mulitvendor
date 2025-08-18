@@ -1,5 +1,5 @@
 import express from 'express';
-import { approveVendor, deleteVendor, getVendor, getVendorProducts, getVendors, registerVendor, updateVendor } from './vendor.controller';
+import { approveVendor, deleteVendor, getVendor, getVendorCustomers, getVendorProducts, getVendors, registerVendor, updateVendor } from './vendor.controller';
 import { admin, protect, vendor } from '../auth/auth.middleware';
 
 const router = express.Router();
@@ -12,6 +12,7 @@ router.get('/products/:id', getVendorProducts);
 // Vendor routes
 router.put('/:id', protect, vendor, updateVendor);
 router.delete('/:id', protect, vendor, deleteVendor);
+router.get('/store/customers', protect, vendor, getVendorCustomers)
 
 // Admin routes
 router.put('/approve/:id', protect, admin, approveVendor);

@@ -19,7 +19,7 @@ import env from "../../config/env";
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {
     const { fullName, email, password, role }: IUser = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     // Check if user exists
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -56,7 +56,7 @@ export const registerUser = asyncHandler(
 // @access  Public
 export const loginUser = asyncHandler(async (req: Request, res: Response) => {
   const { email, password }: ILoginUser = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
   const user = await User.findOne({ email });
 
@@ -164,7 +164,7 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id);
 
-  console.log(req.params)
+  // console.log(req.params)
 
   if (!user) {
     throw new AppError("User not found", 404);

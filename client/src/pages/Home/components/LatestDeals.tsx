@@ -5,7 +5,7 @@ import ProductCardPrimary from '@/components/common/ProductCardPrimary';
 import type { IProduct } from '@/types';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
-import { products } from './BestSellers';
+import useGetAllProducts from '@/hooks/useGetAllProducts';
 
 const specialProduct: IProduct = {
   _id: "prod001",
@@ -37,6 +37,7 @@ const specialProduct: IProduct = {
 };
 
 export default function LatestDeals() {
+  const {products} = useGetAllProducts()
   return (
     <div className='space-y-6'>
       {/* Header */}
@@ -62,7 +63,7 @@ export default function LatestDeals() {
     <SpecialProductCard product={specialProduct} />
   </div>
 
-  {products.slice(0, 11).map((product, i) => (
+  {products?.data?.slice(0, 11).map((product:IProduct, i:number) => (
     <div className='col-span-1' key={i}>
       <ProductCardPrimary product={product} />
     </div>

@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { vendors } from '@/pages/Home/components/BestSellers'
 import React, { useState } from 'react'
 import { FaBarsProgress } from 'react-icons/fa6'
 import { IoGrid } from 'react-icons/io5'
@@ -16,9 +15,12 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import type { IProduct, IVendor } from '@/types'
 
-export default function VendorContainer() {
+export default function VendorContainer({vendors}:{vendors:IVendor[]}) {
     const [productLayout, setProductLayout] = useState("grid")
+    
+    console.log(vendors)
     return (
         <div className='space-y-5 text-primary'>
             {/* header  */}
@@ -69,7 +71,7 @@ export default function VendorContainer() {
             <Separator className="w-full" />
             <div className='grid grid-cols-2 lg:grid-cols-3 gap-5'>
                 {
-                    vendors?.map((vendor, index) => (
+                    vendors?.map((vendor:IVendor, index:number) => (
                         <VendorCard vendor={vendor} key={index} />
                     ))
                 }

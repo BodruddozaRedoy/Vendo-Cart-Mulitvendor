@@ -21,7 +21,7 @@ router.post('/login', loginUser);
 router.post("/logout", logoutUser)
 
 router.get('/me', protect, getMe);
-router.put('/', protect, updateUser);
+router.put('/update', protect, updateUser);
 // router.delete('/:id', protect, admin, deleteUser);
 
 // Admin routes

@@ -5,9 +5,9 @@ import { Toaster } from 'sonner'
 import { useGetProfile } from '@/hooks/useGetProfile'
 
 export default function MainLayout() {
-  const { user, isLoading } = useGetProfile()
+  const { isLoading } = useGetProfile()
   return (
-    <div>
+    <>
       {
         isLoading ? (
           <div className='w-full h-screen flex items-center justify-center'>
@@ -28,6 +28,6 @@ export default function MainLayout() {
         )
       }
       <Toaster />
-    </div>
+    </>
   )
 }

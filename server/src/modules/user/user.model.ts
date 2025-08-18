@@ -1,8 +1,11 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 import { IAddress, IUser } from '../../types';
 // import { IUser, IAddress } from '../../types/user.types';
 
-interface IUserModel extends IUser, Document {}
+interface IUserModel extends IUser, Document {
+  _id: Types.ObjectId,
+  name: string
+}
 
 const addressSchema = new Schema<IAddress>({
   home: { type: String },

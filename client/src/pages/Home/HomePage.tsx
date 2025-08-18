@@ -11,7 +11,7 @@ import Trending from './components/Trending'
 import { useEffect } from 'react'
 
 export default function HomePage() {
-  const {data, isLoading} = useGetUserQuery(undefined)
+  const { data, isLoading } = useGetUserQuery(undefined)
   console.log(data, isLoading)
   // useEffect(() => {
 

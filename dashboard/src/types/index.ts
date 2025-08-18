@@ -5,16 +5,21 @@ export interface ICategories {
 }
 
 export interface IVendor {
-    _id: string,
-    name: string,
-    logo: string,
-    rating: number,
-    reviewsCount: number,
-    isVerified: boolean,
-    address: string,
-    contactMail: string,
-    joinedAt: string,
-    products:IProduct[]
+_id?: string
+  name: string;
+  logo: string;
+  rating?: number;
+  reviewsCount?: number;
+  isVerified?: boolean;
+  address: string;
+  contactMail: string;
+  phone: string;
+  description:string;
+  joinedAt?: string;
+  products?: string[];
+  owner: string; // User ID
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IProduct {
@@ -47,6 +52,7 @@ export interface IAddress {
 
 
 export interface IUser {
+    _id?: string,
     fullName:string,
     email: string,
     password: string,
@@ -57,4 +63,5 @@ export interface IUser {
     picture: string,
     isVerified?: boolean
     isActive?: boolean
+    createdAt?:string
 }

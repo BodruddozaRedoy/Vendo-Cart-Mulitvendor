@@ -9,6 +9,9 @@ import { useAddProductMutation, useGetAProductQuery, useUpdateProductMutation } 
 import { useNavigate, useParams } from "react-router-dom"
 import Loading from "@/components/Loading"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useGetAllCategoryQuery } from "@/redux/features/category/categoryApi"
+import { ICategories } from "@/types"
 
 interface ProductFormData {
   name: string
@@ -32,15 +35,13 @@ interface ProductFormData {
 const UpdateProduct: React.FC = () => {
   const { fetchedUser: user } = useGetProfile()
   const { id } = useParams()
-  const { data } = useGetAProductQuery(id, {
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true
-  })
+  const { data: productData } = useGetAProductQuery(id)
+  const { data: categoriesData } = useGetAllCategoryQuery(undefined)
   const [updateProduct, result] = useUpdateProductMutation()
   const navigate = useNavigate()
   const { toast } = useToast()
 
+  const [subcategories, setSubcategories] = useState<string[]>([])
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     image: "",
@@ -60,14 +61,26 @@ const UpdateProduct: React.FC = () => {
     vendor: user?._id || "",
   })
 
+  // Sync data from API
   useEffect(() => {
-    if (data?.data) {
+    if (productData?.data && categoriesData?.data) {
+      const product = productData.data
+
+      const selectedCategory = categoriesData.data.find((cat: ICategories) => cat.name === product.category)
+      const selectedSubcategories = selectedCategory?.subcategories || []
+
+      setSubcategories(selectedSubcategories)
+
       setFormData({
-        ...data.data,
-        vendor: data.data.vendor || user?._id || "",
+        ...product,
+        colors: product.colors || [],
+        images: product.images || [],
+        features: product.features || [],
+        tags: product.tags || [],
+        vendor: product.vendor || user?._id || "",
       })
     }
-  }, [data, user, id])
+  }, [productData, categoriesData, user])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
@@ -108,8 +121,6 @@ const UpdateProduct: React.FC = () => {
       <div className="mx-auto p-6">
         <h1 className="text-2xl font-semibold mb-4">Update Product</h1>
         <form onSubmit={handleSubmit} className="grid gap-4">
-
-          {/* Two-column grid */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">Product Name</Label>
@@ -121,12 +132,47 @@ const UpdateProduct: React.FC = () => {
             </div>
             <div>
               <Label htmlFor="category">Category</Label>
-              <Input id="category" name="category" value={formData.category} onChange={handleChange} required />
+              <select
+                name="category"
+                id="category"
+                value={formData.category}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setFormData((prev) => ({ ...prev, category: value, subcategory: "" }))
+                  const selectedCategory = categoriesData?.data.find((cat: ICategories) => cat.name === value)
+                  setSubcategories(selectedCategory?.subcategories || [])
+                }}
+                className="w-full border px-4 py-2 rounded"
+                required
+              >
+                <option value="">Select Category</option>
+                {categoriesData?.data?.map((category: ICategories) => (
+                  <option key={category.name} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             </div>
+
             <div>
               <Label htmlFor="subcategory">Subcategory</Label>
-              <Input id="subcategory" name="subcategory" value={formData.subcategory} onChange={handleChange} />
+              <select
+                name="subcategory"
+                id="subcategory"
+                value={formData.subcategory}
+                onChange={(e) => setFormData((prev) => ({ ...prev, subcategory: e.target.value }))}
+                className="w-full border px-4 py-2 rounded"
+                required
+              >
+                <option value="">Select Subcategory</option>
+                {subcategories?.map((subcat: string) => (
+                  <option key={subcat} value={subcat}>
+                    {subcat}
+                  </option>
+                ))}
+              </select>
             </div>
+
             <div>
               <Label htmlFor="brand">Brand</Label>
               <Input id="brand" name="brand" value={formData.brand} onChange={handleChange} required />
@@ -149,12 +195,10 @@ const UpdateProduct: React.FC = () => {
             </div>
           </div>
 
-          {/* Single-column fields */}
           <div>
             <Label htmlFor="description">Product Description</Label>
             <Textarea id="description" name="description" value={formData.description} onChange={handleChange} required />
           </div>
-
           <div>
             <Label htmlFor="colors">Colors (comma separated)</Label>
             <Input id="colors" name="colors" value={formData.colors.join(", ")} onChange={(e) => handleMultiValue(e, "colors")} />

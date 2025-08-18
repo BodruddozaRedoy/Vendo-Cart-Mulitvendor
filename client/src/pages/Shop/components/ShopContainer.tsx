@@ -14,19 +14,38 @@ import { VscSettings } from "react-icons/vsc";
 import { IoGrid } from "react-icons/io5";
 import { FaBarsProgress } from "react-icons/fa6";
 import { useState } from "react";
-import { products } from "@/pages/Home/components/BestSellers";
 import ProductCardPrimary from "@/components/common/ProductCardPrimary";
 import ProductCardSecondary from "@/components/common/ProductCardSecondary";
+import useGetAllProducts from "@/hooks/useGetAllProducts";
+import type { IProduct } from "@/types";
+import useAddToCart from "@/hooks/useAddToCart";
 
 
 
 export default function ShopContainer() {
+    const {products} = useGetAllProducts()
     const [productLayout, setProductLayout] = useState("grid")
+    const {addToCart} = useAddToCart()
+
+    const handleAddToCart = (e:React.MouseEvent<HTMLDivElement>) => {
+        const button = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-add-to-cart]")
+        if(!button) return
+        console.log(button)
+        const productId = button?.getAttribute("data-id")
+        const quantity = button?.getAttribute("data-quantity")
+        const vendorId = button?.getAttribute("data-vendor")
+
+        console.log("vendorId", vendorId)
+        if(productId && quantity){
+            addToCart({productId, quantity, vendorId})
+        }
+    }
+
     return (
         <div className="space-y-5 text-primary">
             {/* header  */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <Button className="bg-primary/10 text-primary gap-2 hover:text-white hidden lg:block">
+                <Button className="bg-primary/10 text-primary gap-2 hover:text-white hidden lg:flex">
                     <VscSettings /> All Filters
                 </Button>
                 <div className="flex items-center justify-center lg:justify-end gap-4 h-8 w-full">
@@ -71,9 +90,9 @@ export default function ShopContainer() {
             </div>
             <Separator className="w-full" />
             {
-                productLayout === "grid" && <div className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
+                productLayout === "grid" && <div onClick={handleAddToCart} className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
                     {
-                        products?.map((product, index) => (
+                        products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardPrimary product={product} key={index} />
                         ))
                     }
@@ -81,9 +100,9 @@ export default function ShopContainer() {
             }
 
             {
-                productLayout === "bars" && <div className="flex flex-col gap-5">
+                productLayout === "bars" && <div onClick={handleAddToCart} className="flex flex-col gap-5">
                     {
-                        products?.map((product, index) => (
+                        products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardSecondary button={true} product={product} key={index} />
                         ))
                     }

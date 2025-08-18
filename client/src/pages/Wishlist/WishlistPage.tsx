@@ -1,6 +1,8 @@
 import React from 'react';
 import { IoMdHeartDislike } from "react-icons/io";
 import { Button } from '@/components/ui/button';
+import { useDeleteWishlistMutation, useGetWishlistQuery } from '@/redux/features/wishlist/wishlistApi';
+import useAddToCart from '@/hooks/useAddToCart';
 
 const sampleWishlist = [
   {
@@ -30,23 +32,27 @@ const sampleWishlist = [
 ];
 
 export default function WishlistPage() {
+  const {data:wishlist, isLoading} = useGetWishlistQuery(undefined)
+  const {addToCart} = useAddToCart()
+  const [deleteWishlist] = useDeleteWishlistMutation()
+  console.log(wishlist)
   return (
     <div className="text-primary px-4 py-8 max-w-7xl mx-auto">
       <h1 className="text-4xl font-bold mb-8">Your Wishlist</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {sampleWishlist.map(product => (
+        {wishlist?.map((product:any) => (
           <div
-            key={product.id}
+            key={product.product._id}
             className="bg-background shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition"
           >
-            <img src={product.image} alt={product.name} className="h-48 w-full object-cover" />
+            <img src={product.product.image} alt={product.product.name} className="h-48 w-full object-cover" />
             <div className="p-4 space-y-2">
-              <h2 className="text-xl font-semibold">{product.name}</h2>
-              <p className="text-primary/60 text-sm">${product.price.toFixed(2)}</p>
+              <h2 className="text-xl font-semibold">{product.product.name}</h2>
+              <p className="text-primary/60 text-sm">${product.product.price.toFixed(2)}</p>
               <div className="flex justify-between items-center mt-3">
-                <Button className="text-sm px-4 py-2">Add to Cart</Button>
-                <button className="text-red-500 hover:text-red-700 transition text-xl" title="Remove from wishlist">
+                <Button onClick={() => addToCart({productId: product.product._id})} className="text-sm px-4 py-2">Add to Cart</Button>
+                <button onClick={() => deleteWishlist(product._id)} className="text-red-500 hover:text-red-700 transition text-xl cursor-pointer" title="Remove from wishlist">
                   <IoMdHeartDislike />
                 </button>
               </div>

@@ -19,6 +19,10 @@ import ManageProducts from "@/pages/admin/ManageProducts"
 import ManageOrders from "@/pages/admin/ManageOrders"
 import AdminAnalytics from "@/pages/admin/AdminAnalytics"
 import Users from "@/pages/admin/Users"
+import Category from "@/pages/admin/Category"
+import ManageVendors from "@/pages/admin/ManageVendors"
+import App from "@/App"
+import Dashboard from "@/pages/Dashboard"
 
 export default function RouterProvider() {
   const location = useLocation()
@@ -32,15 +36,17 @@ export default function RouterProvider() {
     <Routes>
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
+      {/* <Route path="/" element={<Navigate to={"/"} replace/>}/> */}
 
       {/* Protected Routes */}
       <Route element={<PrivateRoute />}>
-        {user?.role === "vendor" && (
-          <Route path="/" element={<Navigate to="/vendor" replace />} />
+        {/* {user?.role === "vendor" && (
+          <Route path="/" element={<App/>} />
         )}
         {user?.role === "admin" && (
           <Route path="/" element={<Navigate to="/admin" replace />} />
-        )}
+        )} */}
+        <Route path="/" element={<Dashboard/>}/>
 
         {/* Vendor */}
         <Route path="/vendor" element={<VendorDashboard />} />
@@ -57,9 +63,11 @@ export default function RouterProvider() {
         {/* Admin */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/manage-products" element={<ManageProducts/>}/>
+        <Route path="/manage-products/categories" element={<Category/>}/>
         <Route path="/manage-orders" element={<ManageOrders/>}/>
         <Route path="/admin-analytics" element={<AdminAnalytics/>}/>
         <Route path="/users" element={<Users/>}/>
+        <Route path="/manage-vendors" element={<ManageVendors/>}/>
       </Route>
 
       <Route path="*" element={<NotFound />} />

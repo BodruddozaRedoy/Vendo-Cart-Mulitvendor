@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IVendor } from '../../types';
-// import { IVendor, IProduct } from '../../types/vendor.types';
 
 interface IVendorModel extends IVendor, Document {}
 
@@ -12,11 +11,21 @@ const vendorSchema = new Schema<IVendorModel>({
   isVerified: { type: Boolean, default: false },
   address: { type: String, required: true },
   contactMail: { type: String, required: true },
+  phone: {type: String, required: true},
+  description: {type: String, required: true},
   joinedAt: { type: Date, default: Date.now },
-  products: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
-  owner: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+// Virtual populate for products
+vendorSchema.virtual('products', {
+  ref: 'Product',
+  localField: '_id',
+  foreignField: 'vendor',
 });
 
 export const Vendor = mongoose.model<IVendorModel>('Vendor', vendorSchema);

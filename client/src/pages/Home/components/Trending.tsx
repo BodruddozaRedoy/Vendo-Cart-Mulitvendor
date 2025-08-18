@@ -1,10 +1,11 @@
 import SectionTitle from '@/components/common/SectionTitle'
 import  { useState } from 'react'
-import { products } from './BestSellers'
 import type { IProduct } from '@/types'
 import ProductCardPrimary from '@/components/common/ProductCardPrimary'
+import useGetAllProducts from '@/hooks/useGetAllProducts'
 
 export default function Trending() {
+    const {products} = useGetAllProducts()
         const [filter, setFilter] = useState<string>("All")
     
     return (
@@ -23,7 +24,7 @@ export default function Trending() {
             {/* product list  */}
             <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5'>
                 {
-                    products?.slice(0, 5).map((product: IProduct, i: number) => (
+                    products?.data?.slice(0, 5).map((product: IProduct, i: number) => (
                         <ProductCardPrimary product={product} key={i} />
                     ))
                 }
