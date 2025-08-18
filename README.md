@@ -101,7 +101,7 @@ vendocart/
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/your-username/vendocart.git
+git clone https://github.com/BodruddozaRedoy/Vendo-Cart-Mulitvendor.git
 cd vendocart
 ```
 
