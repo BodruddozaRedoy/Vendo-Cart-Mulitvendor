@@ -280,5 +280,5 @@ For support, please open an issue on GitHub or contact the development team.
 ---
 
 <p align="center">
-  Made with ❤️ by the VendoCart Team
+  Made with ❤️ by the Bodruddoza Redoy
 </p>
