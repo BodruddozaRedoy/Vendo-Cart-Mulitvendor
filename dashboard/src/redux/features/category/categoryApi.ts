@@ -1,9 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const API_ORIGIN = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1/categories",
+    baseUrl: `${API_ORIGIN}/api/v1/categories`,
     credentials: "include", // Required for cookie support
   }),
   tagTypes: ["Category"],

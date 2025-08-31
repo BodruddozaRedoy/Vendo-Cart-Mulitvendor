@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: ["http://localhost:6868", "http://localhost:8080", "https://vendo-cart-frontend.vercel.app"],
+  origin: ["http://localhost:6868", "http://localhost:8080", "https://vendo-cart-frontend.vercel.app", "https://vendo-cart-dashboard.vercel.app"],
   credentials: true
 }));
 

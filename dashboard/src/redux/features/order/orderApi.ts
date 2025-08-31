@@ -1,10 +1,11 @@
 // src/redux/features/order/orderApi.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+const API_ORIGIN = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 export const orderApi = createApi({
   reducerPath: "orderApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1/order",
+    baseUrl: `${API_ORIGIN}/api/v1/order`,
     credentials: "include", // ✅ send cookies with each request
   }),
   tagTypes: ["Order"],
