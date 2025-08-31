@@ -2,6 +2,8 @@ import CountdownTimer from '@/components/common/Countdown';
 import SectionTitle from '@/components/common/SectionTitle';
 import SpecialProductCard from '@/components/common/SpecialProductCard';
 import ProductCardPrimary from '@/components/common/ProductCardPrimary';
+import ProductCardPrimarySkeleton from '@/components/common/skeletons/ProductCardPrimarySkeleton';
+import DataState from '@/components/common/DataState';
 import type { IProduct } from '@/types';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
@@ -37,7 +39,7 @@ const specialProduct: IProduct = {
 };
 
 export default function LatestDeals() {
-  const {products} = useGetAllProducts()
+  const {products, isLoading, isError, refetch} = useGetAllProducts()
   return (
     <div className='space-y-6'>
       {/* Header */}
@@ -59,16 +61,48 @@ export default function LatestDeals() {
 
       {/* Grid Content */}
       <div className='grid grid-cols-2 lg:grid-cols-5 gap-5'>
-  <div className='col-span-2 lg:col-span-2 lg:row-span-2'>
-    <SpecialProductCard product={specialProduct} />
-  </div>
+        <div className='col-span-2 lg:col-span-2 lg:row-span-2'>
+          <SpecialProductCard product={specialProduct} />
+        </div>
 
-  {products?.data?.slice(0, 11).map((product:IProduct, i:number) => (
-    <div className='col-span-1' key={i}>
-      <ProductCardPrimary product={product} />
-    </div>
-  ))}
-</div>
+        {isLoading && (
+          Array.from({ length: 6 }).map((_, i) => (
+            <div className='col-span-1' key={i}>
+              <ProductCardPrimarySkeleton />
+            </div>
+          ))
+        )}
+
+        {!isLoading && isError && (
+          <div className='col-span-3'>
+            <DataState
+              variant='error'
+              title='Unable to load latest deals'
+              description='Please check your connection and try again.'
+              actionLabel='Retry'
+              onAction={refetch}
+            />
+          </div>
+        )}
+
+        {!isLoading && !isError && (!products?.data || products?.data.length === 0) && (
+          <div className='col-span-3'>
+            <DataState
+              variant='empty'
+              title='No deals right now'
+              description='Check back later for the latest deals.'
+            />
+          </div>
+        )}
+
+        {!isLoading && !isError && products?.data && (
+          products?.data?.slice(0, 11).map((product:IProduct, i:number) => (
+            <div className='col-span-1' key={i}>
+              <ProductCardPrimary product={product} />
+            </div>
+          ))
+        )}
+      </div>
 
     </div>
   );

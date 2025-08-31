@@ -21,7 +21,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: [env.FRONTEND_URL, env.DASHBOARD_URL!],
+  origin: ["http://localhost:6868", "http://localhost:8080"],
   credentials: true
 }));
 

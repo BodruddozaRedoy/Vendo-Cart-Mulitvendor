@@ -1,4 +1,6 @@
 import ProductCardPrimary from '@/components/common/ProductCardPrimary';
+import ProductCardPrimarySkeleton from '@/components/common/skeletons/ProductCardPrimarySkeleton';
+import DataState from '@/components/common/DataState';
 import SectionTitle from '@/components/common/SectionTitle'
 import useGetAllProducts from '@/hooks/useGetAllProducts';
 import type { IProduct, IVendor } from '@/types';
@@ -7,7 +9,7 @@ import { useState } from 'react';
 
 export default function BestSellers() {
     const [filter, setFilter] = useState("All")
-    const {products, isLoading} = useGetAllProducts()
+    const {products, isLoading, isError, refetch} = useGetAllProducts()
   return (
     <div>
       {/* header  */}
@@ -22,13 +24,36 @@ export default function BestSellers() {
         </div>
         <hr className='my-5'/>
         {/* product list  */}
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5'>
-            {
-                products?.data?.slice(0, 5).map((product:IProduct, i:number) => (
-                    <ProductCardPrimary product={product} key={i}/>
-                ))
-            }
-        </div>
+        {isLoading && (
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5'>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <ProductCardPrimarySkeleton key={i} />
+            ))}
+          </div>
+        )}
+        {!isLoading && isError && (
+          <DataState
+            variant='error'
+            title='Unable to load products'
+            description='Please check your connection and try again.'
+            actionLabel='Retry'
+            onAction={refetch}
+          />
+        )}
+        {!isLoading && !isError && (!products?.data || products?.data.length === 0) && (
+          <DataState
+            variant='empty'
+            title='No products available'
+            description='New items will appear here soon.'
+          />
+        )}
+        {!isLoading && !isError && products?.data && (
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5'>
+            {products?.data?.slice(0, 5).map((product:IProduct, i:number) => (
+              <ProductCardPrimary product={product} key={i}/>
+            ))}
+          </div>
+        )}
     </div>
   )
 }

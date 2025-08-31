@@ -4,6 +4,8 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Grid, Navigation, Pagination } from 'swiper/modules';
 import ProductCardSecondary from '@/components/common/ProductCardSecondary';
+import ProductCardSecondarySkeleton from '@/components/common/skeletons/ProductCardSecondarySkeleton';
+import DataState from '@/components/common/DataState';
 import type { IProduct } from '@/types';
 
 import 'swiper/swiper-bundle.css'; // For all Swiper styles
@@ -17,7 +19,7 @@ import useGetAllProducts from '@/hooks/useGetAllProducts';
 // import 'swiper/css/autoplay';
 
 export default function TopSellingProducts() {
-  const {products} = useGetAllProducts()
+  const {products, isLoading, isError, refetch} = useGetAllProducts()
   const prevRef = useRef<HTMLDivElement | null>(null);
   const nextRef = useRef<HTMLDivElement | null>(null);
   const [swiperReady, setSwiperReady] = useState(false);
@@ -50,6 +52,30 @@ export default function TopSellingProducts() {
 
         {/* Swiper content */}
         <div className="mt-5">
+          {isLoading && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ProductCardSecondarySkeleton key={i} />
+              ))}
+            </div>
+          )}
+          {!isLoading && isError && (
+            <DataState
+              variant="error"
+              title="Unable to load top sellers"
+              description="Please check your connection and try again."
+              actionLabel="Retry"
+              onAction={refetch}
+            />
+          )}
+          {!isLoading && !isError && (!products?.data || products?.data.length === 0) && (
+            <DataState
+              variant="empty"
+              title="No top selling products"
+              description="Products will appear here when available."
+            />
+          )}
+          {!isLoading && !isError && products?.data && (
           <Swiper
             className="!h-[600px] sm:!h-[700px] lg:!h-full"
             modules={[Navigation, Pagination, Autoplay, Grid]}
@@ -90,6 +116,7 @@ export default function TopSellingProducts() {
               </SwiperSlide>
             ))}
           </Swiper>
+          )}
         </div>
       </div>
 

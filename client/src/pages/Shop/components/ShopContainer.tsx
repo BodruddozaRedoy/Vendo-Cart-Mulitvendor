@@ -16,6 +16,9 @@ import { FaBarsProgress } from "react-icons/fa6";
 import { useState } from "react";
 import ProductCardPrimary from "@/components/common/ProductCardPrimary";
 import ProductCardSecondary from "@/components/common/ProductCardSecondary";
+import ProductCardPrimarySkeleton from "@/components/common/skeletons/ProductCardPrimarySkeleton";
+import ProductCardSecondarySkeleton from "@/components/common/skeletons/ProductCardSecondarySkeleton";
+import DataState from "@/components/common/DataState";
 import useGetAllProducts from "@/hooks/useGetAllProducts";
 import type { IProduct } from "@/types";
 import useAddToCart from "@/hooks/useAddToCart";
@@ -23,7 +26,7 @@ import useAddToCart from "@/hooks/useAddToCart";
 
 
 export default function ShopContainer() {
-    const {products} = useGetAllProducts()
+    const {products, isLoading, isError, refetch} = useGetAllProducts()
     const [productLayout, setProductLayout] = useState("grid")
     const {addToCart} = useAddToCart()
 
@@ -89,8 +92,39 @@ export default function ShopContainer() {
                 </div>
             </div>
             <Separator className="w-full" />
+            {isLoading && (
+                productLayout === "grid" ? (
+                    <div className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
+                        {Array.from({ length: 8 }).map((_, idx) => (
+                            <ProductCardPrimarySkeleton key={idx} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex flex-col gap-5">
+                        {Array.from({ length: 6 }).map((_, idx) => (
+                            <ProductCardSecondarySkeleton key={idx} />
+                        ))}
+                    </div>
+                )
+            )}
+            {!isLoading && isError && (
+                <DataState
+                    variant="error"
+                    title="Unable to load products"
+                    description="There was a network error while fetching products."
+                    actionLabel="Retry"
+                    onAction={refetch}
+                />
+            )}
+            {!isLoading && !isError && (!products?.data || products?.data?.length === 0) && (
+                <DataState
+                    variant="empty"
+                    title="No products found"
+                    description="Try adjusting filters or check back later."
+                />
+            )}
             {
-                productLayout === "grid" && <div onClick={handleAddToCart} className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
+                !isLoading && !isError && products?.data && productLayout === "grid" && <div onClick={handleAddToCart} className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
                     {
                         products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardPrimary product={product} key={index} />
@@ -100,7 +134,7 @@ export default function ShopContainer() {
             }
 
             {
-                productLayout === "bars" && <div onClick={handleAddToCart} className="flex flex-col gap-5">
+                !isLoading && !isError && products?.data && productLayout === "bars" && <div onClick={handleAddToCart} className="flex flex-col gap-5">
                     {
                         products?.data?.map((product:IProduct, index:number) => (
                             <ProductCardSecondary button={true} product={product} key={index} />

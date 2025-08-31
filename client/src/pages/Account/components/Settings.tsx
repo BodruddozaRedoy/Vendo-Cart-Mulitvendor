@@ -236,7 +236,7 @@ export default function Settings() {
                   className="py-3 px-5 shadow-md bg-background rounded-lg w-full"
                 />
               </div>
-              <p className="mt-3 italic text-sm text-gray-600">Full Home Address: {address.home}</p>
+              <p className="mt-3 italic text-sm text-gray-600">Full Home Address: {address?.home}</p>
             </div>
           </TabsContent>
           <TabsContent value="delivery">
@@ -306,7 +306,7 @@ export default function Settings() {
                   className="py-3 px-5 shadow-md bg-background rounded-lg w-full"
                 />
               </div>
-              <p className="mt-3 italic text-sm text-gray-600">Full Deliver Address: {address.delivery}</p>
+              <p className="mt-3 italic text-sm text-gray-600">Full Deliver Address: {address?.delivery}</p>
             </div>
           </TabsContent>
         </Tabs>
@@ -323,9 +323,9 @@ export default function Settings() {
       <div>
         <h1 className="text-3xl font-semibold mb-3">Bodruddoza Redoy</h1>
         <h4 className="font-semibold">Home Address:</h4>
-        <p className="text-primary/50">{address.home || "Not set"}</p>
+        <p className="text-primary/50">{address?.home || "Not set"}</p>
         <h4 className="font-semibold">Delivery Address:</h4>
-        <p className="text-primary/50">{address.delivery || "Not set"}</p>
+        <p className="text-primary/50">{address?.delivery || "Not set"}</p>
         <h4 className="font-semibold">Phone Number:</h4>
         <p className="text-primary/50">{userData.phone || "Not set"}</p>
         <h4 className="font-semibold">Bio:</h4>
