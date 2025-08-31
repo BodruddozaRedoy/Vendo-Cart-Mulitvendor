@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const env_1 = __importDefault(require("../config/env"));
 const generateToken = (res, userId) => {
-    const token = jsonwebtoken_1.default.sign({ userId }, env_1.default.JWT_SECRET, {
-        expiresIn: env_1.default.JWT_EXPIRE
-    });
+    const secret = env_1.default.JWT_SECRET;
+    const expiresIn = (env_1.default.JWT_EXPIRE || '30d');
+    const token = jsonwebtoken_1.default.sign({ userId }, secret, { expiresIn });
     // Set JWT as HTTP-Only cookie
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development',
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     });

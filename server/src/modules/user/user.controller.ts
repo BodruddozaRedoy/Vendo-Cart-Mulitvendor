@@ -39,7 +39,7 @@ export const registerUser = asyncHandler(
     });
 
     if (user) {
-      generateToken(res, user._id as string);
+      generateToken(res, user._id.toString());
 
       res.status(201).json({
         message: "User created",
@@ -70,7 +70,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     throw new AppError("Password doesn't match", 401);
   }
 
-  generateToken(res, user._id as string);
+  generateToken(res, user._id.toString());
 
   user.password = null!
 

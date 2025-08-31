@@ -16,7 +16,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const env_1 = __importDefault(require("./env"));
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const conn = yield mongoose_1.default.connect(env_1.default.MONGO_URI);
+        const conn = yield mongoose_1.default.connect(env_1.default.MONGO_URI, {
+            dbName: "vendorCartDB"
+        });
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     }
     catch (error) {

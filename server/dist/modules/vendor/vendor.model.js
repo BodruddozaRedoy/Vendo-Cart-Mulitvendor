@@ -43,10 +43,19 @@ const vendorSchema = new mongoose_1.Schema({
     isVerified: { type: Boolean, default: false },
     address: { type: String, required: true },
     contactMail: { type: String, required: true },
+    phone: { type: String, required: true },
+    description: { type: String, required: true },
     joinedAt: { type: Date, default: Date.now },
-    products: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Product' }],
-    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true }
+    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+// Virtual populate for products
+vendorSchema.virtual('products', {
+    ref: 'Product',
+    localField: '_id',
+    foreignField: 'vendor',
 });
 exports.Vendor = mongoose_1.default.model('Vendor', vendorSchema);

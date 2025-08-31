@@ -14,24 +14,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.vendor = exports.admin = exports.protect = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const env_1 = __importDefault(require("../config/env"));
-const user_model_1 = __importDefault(require("../models/user.model"));
+// import env from '../config/env';
+// import User from '../models/user.model';
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const env_1 = __importDefault(require("../../config/env"));
+const user_model_1 = require("../user/user.model");
 // Protect routes
 exports.protect = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
+    // console.log(req.cookies.token, "token")
     if (req.cookies.token) {
         token = req.cookies.token;
     }
     if (!token) {
         res.status(401);
-        throw new Error('Not authorized, no token');
+        throw new Error('No token found');
     }
     try {
         // Verify token
         const decoded = jsonwebtoken_1.default.verify(token, env_1.default.JWT_SECRET);
         // Get user from the token
-        req.user = yield user_model_1.default.findById(decoded.userId).select('-password');
+        req.user = yield user_model_1.User.findById(decoded.userId).select('-password');
         next();
     }
     catch (error) {

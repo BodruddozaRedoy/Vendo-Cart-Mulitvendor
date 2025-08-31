@@ -42,7 +42,7 @@ const addressSchema = new mongoose_1.Schema({
 const userSchema = new mongoose_1.Schema({
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
     phone: { type: String },
     bio: { type: String },
     address: addressSchema,

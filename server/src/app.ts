@@ -13,7 +13,6 @@ import wishlistRoutes from './modules/wishlist/wishlist.routes'
 import cartRoutes from './modules/cart/cart.routes'
 import orderRoutes from './modules/order/order.routes'
 import { errorMiddleware } from './middleware/error.middleware';
-import env from './config/env';
 
 const app = express();
 
@@ -21,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: ["http://localhost:6868", "http://localhost:8080"],
+  origin: ["http://localhost:6868", "http://localhost:8080", "https://vendo-cart-frontend.vercel.app"],
   credentials: true
 }));
 
