@@ -1,4 +1,3 @@
-import React from 'react';
 import { IoMdHeartDislike } from "react-icons/io";
 import { Button } from '@/components/ui/button';
 import { useDeleteWishlistMutation, useGetWishlistQuery } from '@/redux/features/wishlist/wishlistApi';

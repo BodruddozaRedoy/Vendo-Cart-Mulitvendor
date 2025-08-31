@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FaBarsProgress } from 'react-icons/fa6'
 import { IoGrid } from 'react-icons/io5'
 import { VscSettings } from 'react-icons/vsc'
@@ -15,7 +15,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import type { IProduct, IVendor } from '@/types'
+import type { IVendor } from '@/types'
 
 export default function VendorContainer({vendors}:{vendors:IVendor[]}) {
     const [productLayout, setProductLayout] = useState("grid")

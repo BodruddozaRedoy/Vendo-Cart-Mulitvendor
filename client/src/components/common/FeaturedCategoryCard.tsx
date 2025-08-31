@@ -1,5 +1,4 @@
 import type { ICategories } from '@/types'
-import React from 'react'
 import { IoMdArrowDropright } from 'react-icons/io'
 import { Card, CardContent } from '../ui/card'
 
@@ -17,7 +16,7 @@ export default function FeaturedCategoryCard({ category }: categoriesProps) {
                     <div>
                         {
                             category?.subcategories?.map((sub, i) => (
-                                <p className='flex gap-1 items-center text-sm lg:text-md text-primary font-light'><IoMdArrowDropright />{sub}</p>
+                                <p key={i} className='flex gap-1 items-center text-sm lg:text-md text-primary font-light'><IoMdArrowDropright />{sub}</p>
                             ))
                         }
                     </div>

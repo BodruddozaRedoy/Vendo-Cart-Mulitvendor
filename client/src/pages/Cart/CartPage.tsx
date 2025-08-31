@@ -3,15 +3,14 @@ import { FiPlus, FiMinus } from 'react-icons/fi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 import useGetCart from '@/hooks/useGetCart';
-import { type IProduct, type ICart } from '@/types';
+import { type ICart } from '@/types';
 import { useClearCartMutation, useDeleteCartMutation, useUpdateCartMutation } from '@/redux/features/cart/cartApi';
 import Loading from '@/components/common/Loading';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { toast } from 'sonner';
 
 
 export default function CartPage() {
-  const navigate = useNavigate()
   const [cart, setCart] = useState<ICart>();
   const [coupon, setCoupon] = useState('');
   const [discount, setDiscount] = useState(0);

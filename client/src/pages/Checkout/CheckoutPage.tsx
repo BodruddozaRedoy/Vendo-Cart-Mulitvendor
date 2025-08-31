@@ -8,7 +8,6 @@ import useGetCart from "@/hooks/useGetCart"
 import { Badge } from "@/components/ui/badge"
 import { CreditCard, Package, Truck } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { useNavigate } from "react-router-dom"
 import { usePlaceOrderMutation } from "@/redux/features/order/orderApi"
 
 // Stripe imports
@@ -16,7 +15,7 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js"
 import { toast } from "sonner"
 import { useClearCartMutation } from "@/redux/features/cart/cartApi"
 import { useGetProfile } from "@/hooks/useGetProfile"
-import type { IUser } from "@/types"
+// removed unused IUser
 
 
 interface DeliverInfo {
@@ -42,7 +41,6 @@ export const CheckoutPage = () => {
   const { cart } = useGetCart()
   // const { toast } = useToast()
   const [clearCart] = useClearCartMutation()
-  const navigate = useNavigate()
   const [placeOrder, { isLoading }] = usePlaceOrderMutation()
 
   const stripe = useStripe()

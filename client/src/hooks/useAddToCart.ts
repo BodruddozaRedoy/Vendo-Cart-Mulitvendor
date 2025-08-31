@@ -1,5 +1,5 @@
 import { useAddToCartMutation } from "@/redux/features/cart/cartApi";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { useGetProfile } from "./useGetProfile";
 import useGetCart from "./useGetCart";

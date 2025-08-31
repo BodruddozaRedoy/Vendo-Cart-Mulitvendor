@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,8 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { logOut } from "@/redux/features/auth/authSlice";
 import useGetCart from "@/hooks/useGetCart";
+import useGetAllCategories from "@/hooks/useGetAllCategories";
+import type { ICategories } from "@/types";
 
 
 // top nav links 
@@ -44,28 +46,28 @@ const topNavLinks = [
 ]
 
 // categories 
-const categories = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
+// const categories = [
+//   {
+//     value: "next.js",
+//     label: "Next.js",
+//   },
+//   {
+//     value: "sveltekit",
+//     label: "SvelteKit",
+//   },
+//   {
+//     value: "nuxt.js",
+//     label: "Nuxt.js",
+//   },
+//   {
+//     value: "remix",
+//     label: "Remix",
+//   },
+//   {
+//     value: "astro",
+//     label: "Astro",
+//   },
+// ]
 
 // main nav links 
 const mainNavLinks = [
@@ -134,10 +136,10 @@ const MainNavbar = () => {
 
   const [selectCategory, setSelectCategory] = useState("All Categories")
   const [toggleCategory, setToggleCategory] = useState(false)
+  const categoryRef = useRef<HTMLDivElement | null>(null)
   const [logout, result] = useLogoutMutation()
   const {cart} = useGetCart()
-  // const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
-
+  const {categories, isLoading} = useGetAllCategories()
   const dispatch = useDispatch()
   const { user } = useGetProfile()
 
@@ -149,6 +151,30 @@ const MainNavbar = () => {
       toast.success("Logged Out")
     }
   }
+
+  // Close category dropdown on outside click or Escape
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!toggleCategory) return
+      const target = e.target as Node
+      if (categoryRef.current && !categoryRef.current.contains(target)) {
+        setToggleCategory(false)
+      }
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setToggleCategory(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [toggleCategory])
 
   
 
@@ -162,14 +188,14 @@ const MainNavbar = () => {
       <div className="hidden lg:flex z-50">
         {/* <Skeleton className="w-full h-10"/> */}
         {/* select container  */}
-        <div className="py-2  px-5 border-y border-l rounded-l-lg relative">
+        <div ref={categoryRef} className="py-2  px-5 border-y border-l rounded-l-lg relative">
           <p onClick={() => setToggleCategory(!toggleCategory)} className="flex items-center gap-2 cursor-pointer select-none"><p className="w-[120px] truncate">{selectCategory}</p><TiArrowSortedDown /></p>
           {
             toggleCategory && (
               <div className={` absolute top-10 left-2 border py-3 px-3  space-y-2 bg-white max-h-[400px] overflow-y-auto`}>
                 {
-                  categories.map((category, i) => (
-                    <p onClick={() => { setSelectCategory(category.value); setToggleCategory(false) }} key={i} className="py-1 px-3 pr-20 hover:bg-primary hover:text-background text-primary cursor-pointer select-none">{category.label}</p>
+                  categories?.data?.map((category:ICategories, i:number) => (
+                    <p onClick={() => { setSelectCategory(category.name); setToggleCategory(false) }} key={i} className="py-1 px-3 pr-20 hover:bg-primary hover:text-background text-primary cursor-pointer select-none">{category.name}</p>
                   ))
                 }
               </div>

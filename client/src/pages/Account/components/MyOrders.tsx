@@ -1,16 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useGetMyOrdersQuery } from '@/redux/features/order/orderApi';
-import type { IOrder, IProduct } from '@/types';
-import React from 'react'
+import type { IOrder } from '@/types';
 
 
 
-interface IOrderProduct {
-  product: string,
-  quantity: number,
-  _id: string
-}
+// Removed unused interface
 
 export default function MyOrders() {
   const {data:orders} = useGetMyOrdersQuery(undefined, {

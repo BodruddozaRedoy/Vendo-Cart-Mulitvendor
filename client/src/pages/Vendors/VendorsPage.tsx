@@ -3,7 +3,6 @@ import Features from '../Home/components/Feature'
 import VendorContainer from './components/VendorContainer'
 import VendorFilter from './components/VendorFilter'
 import { Link } from 'react-router'
-import { useGetAllVendorQuery } from '@/redux/features/vendor/vendorApi'
 import useGetAllVendor from '@/hooks/useGetAllVendor'
 import LoadingScreen from '@/components/common/LoadingScreen'
 

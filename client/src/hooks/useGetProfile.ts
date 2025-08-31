@@ -1,7 +1,7 @@
 import { useGetUserQuery } from "@/redux/features/auth/authApi"
 import { logOut, setUser } from "@/redux/features/auth/authSlice"
 import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 
 export const useGetProfile = () => {
     // const isAuthenticated = useSelector((state:any) => state.auth.isAuthenticated)

@@ -8,13 +8,13 @@ import { useParams } from "react-router";
 
 
 export default function ProductDetails() {
-  const { addToCart, result } = useAddToCart()
+  const { addToCart } = useAddToCart()
   const {addToWishlist} = useAddToWishlist()
   const { id } = useParams()
   const { data } = useGetAProductQuery(id)
   const product = data?.data
   const [mainImage, setMainImage] = useState(product?.image);
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   useEffect(() => {
     setMainImage(product?.image)
   }, [])
