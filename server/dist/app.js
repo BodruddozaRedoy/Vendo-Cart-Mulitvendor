@@ -31,6 +31,9 @@ if (process.env.NODE_ENV === 'development') {
 // Database connection
 (0, db_1.default)();
 // Routes
+app.get('/', (_req, res) => {
+    res.status(200).json({ ok: true, uptime: process.uptime() });
+});
 app.use('/api/v1/user', user_routes_1.default);
 app.use('/api/v1/vendor', vendor_routes_1.default);
 app.use('/api/v1/product', product_routes_1.default);
@@ -40,8 +43,12 @@ app.use('/api/v1/wishlist', wishlist_routes_1.default);
 app.use('/api/v1/order', order_routes_1.default);
 // Error handling middleware
 app.use(error_middleware_1.errorMiddleware);
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+// Only start a server when not running on Vercel.
+// Vercel Serverless Functions import the app and handle the request lifecycle.
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    });
+}
 exports.default = app;

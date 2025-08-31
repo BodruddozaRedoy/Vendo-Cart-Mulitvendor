@@ -1,11 +1,12 @@
 // src/redux/features/order/orderApi.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { API_BASE_URL } from "@/config";
 
 export const orderApi = createApi({
   reducerPath: "orderApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1/order",
-    credentials: "include", // ✅ send cookies with each request
+    baseUrl: `${API_BASE_URL}/api/v1/order`,
+    credentials: "include", // send cookies with each request
   }),
   tagTypes: ["Order"],
   endpoints: (builder) => ({
@@ -37,3 +38,4 @@ export const orderApi = createApi({
 });
 
 export const { usePlaceOrderMutation, useGetMyOrdersQuery, useTrackOrderQuery } = orderApi;
+

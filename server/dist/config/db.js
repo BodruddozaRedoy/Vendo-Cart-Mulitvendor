@@ -14,16 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const env_1 = __importDefault(require("./env"));
+let connectingPromise = null;
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    // Skip when no URI configured (avoid crashing serverless at import time)
+    if (!env_1.default.MONGO_URI) {
+        console.warn('MONGO_URI not set — skipping DB connection');
+        return;
+    }
+    // Reuse existing connection if already connected or connecting
+    if (mongoose_1.default.connection.readyState === 1)
+        return; // connected
+    if (connectingPromise)
+        return connectingPromise;
     try {
-        const conn = yield mongoose_1.default.connect(env_1.default.MONGO_URI, {
-            dbName: "vendorCartDB"
-        });
+        connectingPromise = mongoose_1.default.connect(env_1.default.MONGO_URI, { dbName: 'vendorCartDB' });
+        const conn = yield connectingPromise;
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     }
     catch (error) {
-        console.error(`Error: ${error.message}`);
-        process.exit(1);
+        console.error(`Mongo connection error: ${error.message}`);
+    }
+    finally {
+        connectingPromise = null;
     }
 });
 exports.default = connectDB;

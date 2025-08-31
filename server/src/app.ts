@@ -32,6 +32,9 @@ if (process.env.NODE_ENV === 'development') {
 connectDB();
 
 // Routes
+app.get('/', (_req, res) => {
+  res.status(200).json({ ok: true, uptime: process.uptime() });
+});
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/vendor', vendorRoutes);
 app.use('/api/v1/product', productRoutes);
