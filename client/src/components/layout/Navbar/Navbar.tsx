@@ -218,7 +218,7 @@ const MainNavbar = () => {
         {/* account  */}
         {
           user ? <DropdownMenu>
-            <DropdownMenuTrigger className="flex gap-2 items-center font-semibold text-primary cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all"><img className="w-5" src="/public/account.svg" alt="" /> Account</DropdownMenuTrigger>
+            <DropdownMenuTrigger className="flex gap-2 items-center font-semibold text-primary cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all"><img className="w-5" src="./public/account.svg" alt="" /> Account</DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel className="cursor-pointer">My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -234,12 +234,12 @@ const MainNavbar = () => {
         }
         {/* wishlist  */}
         <div className="flex gap-2 items-center text-primary font-semibold cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all">
-          <img className="w-5" src="/public/wishlist.svg" alt="" />
+          <img className="w-5" src="./public/wishlist.svg" alt="" />
           <Link to={"/wishlist"}><p>Wishlist</p></Link>
         </div>
         {/* cart  */}
         <Link to={"/cart"} className="flex relative gap-2 items-center text-primary font-semibold cursor-pointer select-none hover:bg-primary/20 py-1 px-3 rounded-lg transition-all">
-          <img className="w-5 " src="/public/cart.svg" alt=""/>
+          <img className="w-5 " src="./public/cart.svg" alt=""/>
           <div className="flex items-start"><p>Cart</p><p className="text-xs bg-muted w-4 h-4 flex items-center justify-center absolute top-0 right-0 rounded-full text-center">{cart?.products?.length || "0"}</p></div>
         </Link>
 
