@@ -43,9 +43,15 @@ app.use('/api/v1/order', orderRoutes)
 // Error handling middleware
 app.use(errorMiddleware);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+// Only start a server when not running on Vercel.
+// Vercel Serverless Functions import the app and handle the request lifecycle.
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(
+      `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    );
+  });
+}
 
 export default app;
